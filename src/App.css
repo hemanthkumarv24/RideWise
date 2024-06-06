@@ -1,0 +1,160 @@
+/* src/NavBar.css */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #050b25;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 98%;
+  z-index: 9999;
+}
+
+.navbar-logo {
+  color: white;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.navbar-list {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-item {
+  margin-right: 40px; /* Use margin-left to separate items */
+  margin-left: 10px;
+  font-size: larger;
+}
+
+.navbar-link {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-link:hover {
+  text-decoration: underline;
+}
+
+.active {
+  font-weight: bold;
+  color: rgb(248, 255, 35);
+}
+
+/* src/Home.css */
+
+.home-container {
+  background-image: url('assets/Background.jpg'); /* Update with your image path */
+  background-size: cover; /* Cover the entire container */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Don't repeat the image */
+  height: 100vh; /* Ensure it covers the full viewport height */
+  width: 101.55%; /* Ensure it covers the full viewport width */
+  display: flex;
+  margin-left: -1%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center; /* Center text */
+}
+
+.home-content {
+  color: white;
+  font-size: 2.5rem;
+  margin: 0;
+  margin-left: -30%;
+  /* margin-top: -5%; */
+  overflow-y: hidden;
+}
+
+
+
+.justified-text h3 {
+  text-align: justify; /* Justify the text within the h3 element */
+  overflow-y: hidden;
+
+  margin: 0 auto;
+  max-width: 900px; /* Optional: control the width for better justification */
+}
+
+.justified-text h5 {
+  text-align: justify; /* Justify the text within the h3 element */
+  overflow-y: hidden;
+  font-style: italic;
+  font-weight: 400;
+  margin-top: 5%;
+  max-width: 900px; /* Optional: control the width for better justification */
+}
+
+
+.button {
+  margin-top: 20px; /* Add some margin to the button for spacing */
+  padding: 40px;
+  background-color: yellow;
+  margin-left: -30%;
+  width: 60%;
+  color: black;
+  font-size: 2.5rem;
+  /* margin-top: 10%; */
+  font-weight: bold;
+}
+
+.about-container{
+  /* width: 100%; */
+  background-color: rgb(213, 236, 209);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center; /* Center align text in the column */
+  padding: 20px;
+}
+
+.about-container h1 {
+  padding-top: 4%;
+  padding-bottom: 1%;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: bolder;
+  color: brown;
+}
+
+.about-container p{
+  font-size: 1.5rem;
+  margin: 2;
+  padding: 0;
+}
+
+.cab-user{
+  background-color: rgb(209, 208, 200);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center; /* Center align text in the column */
+}
+
+.row{
+  padding-top: 2%;
+}
+
+.cab-user h1{
+  padding-top: 2%;
+  font-size: 2.5rem;
+  font-weight: bolder;
+  color: brown;
+}
+
+.col p{
+  max-width: 500px;
+  font-size: 1.5rem;
+  margin: 2;
+
+}

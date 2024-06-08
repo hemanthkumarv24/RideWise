@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '',  # Replace with your RDS database name
+        'NAME': 'RideWise',  # Replace with your RDS database name
         'USER': 'postgres',  # Replace with your RDS username
         'PASSWORD': 'postgres',  # Replace with your RDS password
-        'HOST': 'ridewise.c7swquu8mbvx.ap-southeast-2.rds.amazonaws.com',  # RDS endpoint
+        'HOST': 'ridewise.cfse24iqgmkk.ap-southeast-1.rds.amazonaws.com',  # RDS endpoint
         'PORT': '5432',  # Default PostgreSQL port
     }
 }

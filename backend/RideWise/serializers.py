@@ -10,8 +10,8 @@ class TripSerializer(serializers.ModelSerializer):
 class FavoriteRouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteRoute
-        fields = ['id', 'user_id', 'pickup_location', 'destination_location']
-
+        fields = '__all__'
+        
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review

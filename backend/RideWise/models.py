@@ -1,15 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
-class User(models.Model):
-    username = models.CharField(max_length=100)
-    email = models.EmailField()
-    password = models.CharField(max_length=100)
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
-    # Add any other fields you need for the User model
-
-    def __str__(self):
-        return self.username
 
 class Trips(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -27,16 +19,17 @@ class Trips(models.Model):
         return f"{self.user.username} - {self.pickup_location} to {self.destination_location}"
 
 class FavoriteRoute(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     pickup_location = models.CharField(max_length=100)
     destination_location = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.user.username} - {self.pickup_location} to {self.destination_location}"
+        return f"{self.user_id} - {self.pickup_location} to {self.destination_location}"
 
 class Review(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    service = models.CharField(max_length=100)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    service_name = models.CharField(max_length=100)
+    service_id = models.CharField(max_length=100)  # New field
     rating = models.IntegerField()
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -45,14 +38,16 @@ class Review(models.Model):
         return f"{self.user.username} - {self.service} - {self.rating}/5"
 
 class CabService(models.Model):
-    name = models.CharField(max_length=100)
+    service_id = models.CharField(max_length=100)
+    service_name = models.CharField(max_length=100, default='Uber')  # Default value added
     vehicle_type = models.CharField(max_length=100)
     description = models.TextField()
 
     def __str__(self):
-        return self.name
+        return self.service_name
 
 class Ride(models.Model):
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     pickup_address = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
     price = models.FloatField()

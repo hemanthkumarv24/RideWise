@@ -21,26 +21,32 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-class TripViewSet(viewsets.ModelViewSet):
+class TripViewSet(APIView):
     queryset = Trips.objects.all()
     serializer = TripSerializer
 
-        
 class FavoriteRouteViewSet(APIView):
     def post(self, request):
         user_id = request.data.get('user_id')
-        if not User.objects.filter(pk=user_id).exists():
-            return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = FavoriteRouteSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def get(self, request, pk=None):
         try:
-            favorite_route = FavoriteRoute.objects.get(pk=pk)
+            user_exists = User.objects.filter(id=user_id).exists()
+            if not user_exists:
+                return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+                
+            serializer = FavoriteRouteSerializer(data=request.data)
+            print(serializer)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def get(self, request):
+        user_id = request.data.get('user_id')
+        try:
+            favorite_route = FavoriteRoute.objects.get(user_id=user_id)
+            print(favorite_route)
             serializer = FavoriteRouteSerializer(favorite_route)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except FavoriteRoute.DoesNotExist:
@@ -48,16 +54,64 @@ class FavoriteRouteViewSet(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class ReviewViewSet(viewsets.ModelViewSet):
+class ReviewViewSet(APIView):
     queryset = Review.objects.all()
     serializer = ReviewSerializer
 
+    def post(self, request):
+        user_id = request.data.get('user_id')
+        service_name = request.data.get('service_name')  # Get service_name from payload
+        try:
+            user_exists = User.objects.filter(id=user_id).exists()
+            if not user_exists:
+                return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Get the first CabService object with matching service_name
+            cab_services = CabService.objects.filter(service_name=service_name)
+            if not cab_services.exists():
+                return Response({'error': 'Service does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Assuming we take the first match
+            cab_service = cab_services.first()
+            
+            # Update service_id in request.data with the matching service_id from CabService
+            request.data['service_id'] = cab_service.service_id
+            
+            serializer = ReviewSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class CabServiceViewSet(viewsets.ModelViewSet):
-    queryset = CabService.objects.all()
-    serializer_class = CabServiceSerializer
+    def get(self, request):
+        user_id = request.data.get('user_id')
+        try:
+            review = Review.objects.get(user_id=user_id)
+            serializer = ReviewSerializer(review)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Review.DoesNotExist:
+            return Response({'error': 'Review not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class RideViewSet(viewsets.ModelViewSet):
+
+class CabServiceViewSet(APIView):
+    def get(self, request):
+        service_name = request.query_params.get('service_name', None)
+        try:
+            if service_name:
+                cab_services = CabService.objects.filter(service_name=service_name)
+            else:
+                cab_services = CabService.objects.all()
+                
+            serializer = CabServiceSerializer(cab_services, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class RideViewSet(APIView):
     queryset = Ride.objects.all()
     serializer_class = RideSerializer
 
@@ -97,11 +151,6 @@ class Login(APIView):
             return Response({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # Fare estimation API
-
-
-
-# Pricing parameters for Bangalore
-
 # Uber Pricing
 UBER_PRICING = {
     'auto': {'base_rate': 25, 'per_km_rate': 9, 'per_min_rate': 1, 'operating_fee': 10},
@@ -142,8 +191,6 @@ RAPIDO_PRICING = {
 }
 
 DEFAULT_SURGE_MULTIPLIER = 1.0
-
-
 def calculate_fare(pricing, distance_km, time_min, surge_multiplier=DEFAULT_SURGE_MULTIPLIER):
     base_rate = pricing['base_rate']
     if 'base_distance' in pricing:

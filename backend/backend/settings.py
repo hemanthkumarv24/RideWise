@@ -46,7 +46,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Ensure this line is present
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -78,13 +78,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'RideWise',  # Replace with your RDS database name
-        'USER': 'postgres',  # Replace with your RDS username
-        'PASSWORD': 'postgres',  # Replace with your RDS password
-        'HOST': 'ridewise.cfse24iqgmkk.ap-southeast-1.rds.amazonaws.com',  # RDS endpoint
-        'PORT': '5432',  # Default PostgreSQL port
+        # 'NAME': 'RideWise',  
+        # 'USER': 'postgres', 
+        # 'PASSWORD': 'postgres', 
+        # 'HOST': 'ridewise.c7swquu8mbvx.ap-southeast-2.rds.amazonaws.com', 
+        # 'PORT': '5432',  
+        'NAME': 'RideWise',  
+        'USER': 'postgres', 
+        'PASSWORD': 'Akhkds@2004', 
+        'HOST': 'localhost', 
+        'PORT': '5432',  
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -126,3 +132,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Rest Framework settings
+
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_USE_SESSIONS = False

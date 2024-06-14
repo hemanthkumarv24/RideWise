@@ -4,14 +4,14 @@ from django.conf import settings
 
 
 class Trips(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     pickup_location = models.CharField(max_length=100)
     destination_location = models.CharField(max_length=100)
     distance_km = models.DecimalField(max_digits=10, decimal_places=2)
     time_minutes = models.IntegerField()
     surge_multiplier = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField(auto_now_add=True)
-    service = models.CharField(max_length=100)
+    service_name = models.CharField(max_length=100)
     vehicle_type = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 

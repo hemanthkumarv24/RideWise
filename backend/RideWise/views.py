@@ -1,29 +1,20 @@
 from rest_framework import viewsets,status
-from .models import  Trips, FavoriteRoute, Review,CabService, Ride
-from .serializers import TripSerializer, FavoriteRouteSerializer, ReviewSerializer, CabServiceSerializer, RideSerializer
+from .models import  Trips, FavoriteRoute, Review,CabService
+from .serializers import TripSerializer, FavoriteRouteSerializer, ReviewSerializer, CabServiceSerializer
 from django.conf import settings
 from django.views import View
 import requests
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.http import JsonResponse, HttpResponse
-from django.conf import settings
 from urllib.parse import urlencode
 from django.utils.decorators import method_decorator
-from django.http import JsonResponse
 import json
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
-
-class TripViewSet(APIView):
-    queryset = Trips.objects.all()
-    serializer = TripSerializer
 
 class FavoriteRouteViewSet(APIView):
     def post(self, request):
@@ -46,7 +37,6 @@ class FavoriteRouteViewSet(APIView):
         user_id = request.data.get('user_id')
         try:
             favorite_route = FavoriteRoute.objects.get(user_id=user_id)
-            print(favorite_route)
             serializer = FavoriteRouteSerializer(favorite_route)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except FavoriteRoute.DoesNotExist:
@@ -111,9 +101,6 @@ class CabServiceViewSet(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class RideViewSet(APIView):
-    queryset = Ride.objects.all()
-    serializer_class = RideSerializer
 
 class Signup(APIView):
     def post(self, request):
@@ -261,38 +248,52 @@ class EstimateFareView(APIView):
         except (ValueError, TypeError, json.JSONDecodeError):
             return Response({'error': 'Invalid input, please provide valid JSON with numeric values for distance, time, and surge multiplier'}, status=status.HTTP_400_BAD_REQUEST)
 
-class TripData(View):
+class TripData(APIView):
     def post(self, request):
-        user_id = request.data.get('user_id')
-        pickup_location = request.data.get('pickup_location')
-        destination_location = request.data.get('destination_location')
-        distance_km = request.data.get('distance_km')
-        time_minutes = request.data.get('time_minutes')
-        surge_multiplier = request.data.get('surge_multiplier')
-        service = request.data.get('service')
-        vehicle_type = request.data.get('vehicle_type')
-        price = request.data.get('price')
+        body = json.loads(request.body)
+        user_id = body.get('user_id')
+        pickup_location = body.get('pickup_location')
+        destination_location = body.get('destination_location')
+        distance_km = body.get('distance_km')
+        time_minutes = body.get('time_minutes')
+        surge_multiplier = body.get('surge_multiplier')
+        service_name = body.get('service_name')
+        vehicle_type = body.get('vehicle_type')
+        price = body.get('price')
 
-        if not user_id or not pickup_location or not destination_location or not distance_km or not time_minutes or not surge_multiplier or not service or not vehicle_type or not price:
+        if not user_id or not pickup_location or not destination_location or not distance_km or not time_minutes or not surge_multiplier or not service_name or not vehicle_type or not price:
             return Response({'error': 'Please provide all the required data'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            trip = Trip.objects.create(
-                user_id=user_id,
+            user = User.objects.get(id=user_id)  # Fetch the User instance
+
+            trip = Trips.objects.create(
+                user_id=user,  # Assign the User instance
                 pickup_location=pickup_location,
                 destination_location=destination_location,
                 distance_km=distance_km,
                 time_minutes=time_minutes,
                 surge_multiplier=surge_multiplier,
-                service=service,
+                service_name=service_name,
                 vehicle_type=vehicle_type,
                 price=price
             )
             return Response({'message': 'Trip data stored successfully'}, status=status.HTTP_201_CREATED)
-        except:
-            return Response({'error': 'Failed to store trip data'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': f'Failed to store trip data: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def get(self, request):
-        trips = Trip.objects.all()
+        user_id = request.query_params.get('user_id')
+        if user_id:
+            try:
+                user = User.objects.get(id=user_id)
+                trips = Trips.objects.filter(user_id=user)
+            except User.DoesNotExist:
+                return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            trips = Trips.objects.all()
+            
         serializer = TripSerializer(trips, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

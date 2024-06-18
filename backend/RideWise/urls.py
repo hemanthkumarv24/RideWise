@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-     TripData, FavoriteRouteViewSet, ReviewViewSet, CabServiceViewSet,   EstimateFareView, Signup, Login
+     TripData, FavoriteRouteViewSet, ReviewViewSet, CabServiceViewSet,   EstimateFareView, Signup, Login, Analytics 
 )
 
 # Define the urlpatterns explicitly for each viewset and view
@@ -24,5 +24,8 @@ urlpatterns = [
 
     #price estimation
     path('estimate_fare/', EstimateFareView.as_view(), name='estimate_fare'),
+
+    path('analytics/', Analytics.as_view(), name='analytics'),
+
     
 ]

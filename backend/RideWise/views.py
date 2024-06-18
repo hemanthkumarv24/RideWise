@@ -9,11 +9,17 @@ from django.shortcuts import redirect
 from django.http import JsonResponse, HttpResponse
 from urllib.parse import urlencode
 from django.utils.decorators import method_decorator
-import json
+import json,random,time
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
+from django.db.models import Count, Avg, Func
+
+from django.contrib.auth import get_user_model
+from random import randint, uniform, choice
+import decimal
+from datetime import datetime, timedelta
 
 
 class FavoriteRouteViewSet(APIView):
@@ -25,7 +31,6 @@ class FavoriteRouteViewSet(APIView):
                 return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
                 
             serializer = FavoriteRouteSerializer(data=request.data)
-            print(serializer)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -43,6 +48,8 @@ class FavoriteRouteViewSet(APIView):
             return Response({'error': 'Favorite route not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 class ReviewViewSet(APIView):
     queryset = Review.objects.all()
@@ -122,8 +129,9 @@ class Signup(APIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class Login(APIView):
     def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
+        body = json.loads(request.body)
+        username = body.get('username')
+        password = body.get('password')
 
         if not username or not password:
             return Response({'error': 'Please provide username and password'}, status=status.HTTP_400_BAD_REQUEST)
@@ -140,7 +148,7 @@ class Login(APIView):
 # Fare estimation API
 # Uber Pricing
 UBER_PRICING = {
-    'auto': {'base_rate': 25, 'per_km_rate': 9, 'per_min_rate': 1, 'operating_fee': 10},
+    'auto': {'base_rate': 24, 'per_km_rate': 8, 'per_min_rate': 1, 'operating_fee': 10},
     'go': {'base_rate': 40, 'per_km_rate': 11, 'per_min_rate': 1.5, 'operating_fee': 15},
     'moto': {'base_rate': 20, 'per_km_rate': 5, 'per_min_rate': 1, 'operating_fee': 7},
     'premier': {'base_rate': 60, 'per_km_rate': 20, 'per_min_rate': 2.5, 'operating_fee': 20},
@@ -189,7 +197,12 @@ def calculate_fare(pricing, distance_km, time_min, surge_multiplier=DEFAULT_SURG
     time_cost = time_min * pricing['per_min_rate']
     total_fare = base_rate + distance_cost + time_cost + pricing['operating_fee']
     total_fare *= surge_multiplier
-    return total_fare
+    
+    return round(total_fare, 2)
+
+def apply_variability(fare, max_variability=15):
+    variability = random.uniform(-max_variability, max_variability)
+    return round(fare + variability, 2)
 
 class EstimateFareView(APIView):
     def post(self, request):
@@ -200,55 +213,77 @@ class EstimateFareView(APIView):
             time_min = float(body.get('time_min'))
             surge_multiplier = float(body.get('surge_multiplier', DEFAULT_SURGE_MULTIPLIER))
             
+            # Seed random number generator for consistent variability during the request
+            random.seed(f"{user_id}-{distance_km}-{time_min}-{time.time()}")
+            
             # Check if the user exists
-            if User.objects.filter(id=user_id).exists():
-                fares = {
-                    'uber': {
-                        'auto': round(calculate_fare(UBER_PRICING['auto'], distance_km, time_min, surge_multiplier), 2),
-                        'go': round(calculate_fare(UBER_PRICING['go'], distance_km, time_min, surge_multiplier), 2),
-                        'moto': round(calculate_fare(UBER_PRICING['moto'], distance_km, time_min, surge_multiplier), 2),
-                        'premier': round(calculate_fare(UBER_PRICING['premier'], distance_km, time_min, surge_multiplier), 2),
-                        'uberxl': round(calculate_fare(UBER_PRICING['uberxl'], distance_km, time_min, surge_multiplier), 2),
-                        'gosedan': round(calculate_fare(UBER_PRICING['gosedan'], distance_km, time_min, surge_multiplier), 2),
-                        'uberxs': round(calculate_fare(UBER_PRICING['uberxs'], distance_km, time_min, surge_multiplier), 2),
-                        'pool': round(calculate_fare(UBER_PRICING['pool'], distance_km, time_min, surge_multiplier), 2),
-                        'xlplus': round(calculate_fare(UBER_PRICING['xlplus'], distance_km, time_min, surge_multiplier), 2)
-                    },
-                    'ola': {
-                        'prime_sedan': round(calculate_fare(OLA_PRICING['prime_sedan'], distance_km, time_min, surge_multiplier), 2),
-                        'mini': round(calculate_fare(OLA_PRICING['mini'], distance_km, time_min, surge_multiplier), 2),
-                        'auto': round(calculate_fare(OLA_PRICING['auto'], distance_km, time_min, surge_multiplier), 2),
-                        'share': round(calculate_fare(OLA_PRICING['share'], distance_km, time_min, surge_multiplier), 2),
-                        'rentals': round(calculate_fare(OLA_PRICING['rentals'], distance_km, time_min, surge_multiplier), 2),
-                        'outstation': round(calculate_fare(OLA_PRICING['outstation'], distance_km, time_min, surge_multiplier), 2),
-                        'luxury': round(calculate_fare(OLA_PRICING['luxury'], distance_km, time_min, surge_multiplier), 2),
-                        'taxi_for_sure': round(calculate_fare(OLA_PRICING['taxi_for_sure'], distance_km, time_min, surge_multiplier), 2)
-                    },
-                    'namma_yatri': {
-                        'non_ac_mini': round(calculate_fare(NAMMA_YATRI_PRICING['non_ac_mini'], distance_km, time_min, surge_multiplier), 2),
-                        'ac_mini': round(calculate_fare(NAMMA_YATRI_PRICING['ac_mini'], distance_km, time_min, surge_multiplier), 2),
-                        'sedan': round(calculate_fare(NAMMA_YATRI_PRICING['sedan'], distance_km, time_min, surge_multiplier), 2),
-                        'xl_cab': round(calculate_fare(NAMMA_YATRI_PRICING['xl_cab'], distance_km, time_min, surge_multiplier), 2)
-                    },
-                    'rapido': {
-                        'auto': round(calculate_fare(RAPIDO_PRICING['auto'], distance_km, time_min, surge_multiplier), 2),
-                        'bike': round(calculate_fare(RAPIDO_PRICING['bike'], distance_km, time_min, surge_multiplier), 2)
-                    }
-                }
-                
-                response = {
-                    'distance_km': distance_km,
-                    'time_min': time_min,
-                    'surge_multiplier': surge_multiplier,
-                    'fares': fares
-                }
-                return Response(response)
-            else:
+            if not User.objects.filter(id=user_id).exists():
                 return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
+            
+            # Generate base fare estimates
+            uber_fares = {
+                'auto': calculate_fare(UBER_PRICING['auto'], distance_km, time_min, surge_multiplier),
+                'go': calculate_fare(UBER_PRICING['go'], distance_km, time_min, surge_multiplier),
+                'moto': calculate_fare(UBER_PRICING['moto'], distance_km, time_min, surge_multiplier),
+                'premier': calculate_fare(UBER_PRICING['premier'], distance_km, time_min, surge_multiplier),
+                'uberxl': calculate_fare(UBER_PRICING['uberxl'], distance_km, time_min, surge_multiplier),
+                'gosedan': calculate_fare(UBER_PRICING['gosedan'], distance_km, time_min, surge_multiplier),
+                'uberxs': calculate_fare(UBER_PRICING['uberxs'], distance_km, time_min, surge_multiplier),
+                'pool': calculate_fare(UBER_PRICING['pool'], distance_km, time_min, surge_multiplier),
+                'xlplus': calculate_fare(UBER_PRICING['xlplus'], distance_km, time_min, surge_multiplier)
+            }
+            
+            ola_fares = {
+                'prime_sedan': calculate_fare(OLA_PRICING['prime_sedan'], distance_km, time_min, surge_multiplier),
+                'mini': calculate_fare(OLA_PRICING['mini'], distance_km, time_min, surge_multiplier),
+                'auto': calculate_fare(OLA_PRICING['auto'], distance_km, time_min, surge_multiplier),
+                'share': calculate_fare(OLA_PRICING['share'], distance_km, time_min, surge_multiplier),
+                'rentals': calculate_fare(OLA_PRICING['rentals'], distance_km, time_min, surge_multiplier),
+                'outstation': calculate_fare(OLA_PRICING['outstation'], distance_km, time_min, surge_multiplier),
+                'luxury': calculate_fare(OLA_PRICING['luxury'], distance_km, time_min, surge_multiplier),
+                'taxi_for_sure': calculate_fare(OLA_PRICING['taxi_for_sure'], distance_km, time_min, surge_multiplier)
+            }
+            
+            namma_yatri_fares = {
+                'non_ac_mini': calculate_fare(NAMMA_YATRI_PRICING['non_ac_mini'], distance_km, time_min, surge_multiplier),
+                'ac_mini': calculate_fare(NAMMA_YATRI_PRICING['ac_mini'], distance_km, time_min, surge_multiplier),
+                'sedan': calculate_fare(NAMMA_YATRI_PRICING['sedan'], distance_km, time_min, surge_multiplier),
+                'xl_cab': calculate_fare(NAMMA_YATRI_PRICING['xl_cab'], distance_km, time_min, surge_multiplier)
+            }
+            
+            rapido_fares = {
+                'auto': calculate_fare(RAPIDO_PRICING['auto'], distance_km, time_min, surge_multiplier),
+                'bike': calculate_fare(RAPIDO_PRICING['bike'], distance_km, time_min, surge_multiplier)
+            }
+            
+            # Apply variability ensuring the difference is within the max limit
+            max_difference = 15
+            fares = {
+                'uber': {service: apply_variability(fare, max_difference) for service, fare in uber_fares.items()},
+                'ola': {service: apply_variability(fare, max_difference) for service, fare in ola_fares.items()},
+                'namma_yatri': {service: apply_variability(fare, max_difference) for service, fare in namma_yatri_fares.items()},
+                'rapido': {service: apply_variability(fare, max_difference) for service, fare in rapido_fares.items()}
+            }
+            
+            # Ensure the difference between similar services is within the specified range
+            for service in uber_fares.keys():
+                if service in ola_fares and abs(fares['uber'][service] - fares['ola'][service]) > max_difference:
+                    average_fare = (fares['uber'][service] + fares['ola'][service]) / 2
+                    fares['uber'][service] = round(average_fare + random.uniform(-max_difference / 2, max_difference / 2), 2)
+                    fares['ola'][service] = round(average_fare - random.uniform(-max_difference / 2, max_difference / 2), 2)
+            
+            response = {
+                'distance_km': distance_km,
+                'time_min': time_min,
+                'surge_multiplier': surge_multiplier,
+                'fares': fares
+            }
+            return Response(response)
         except (ValueError, TypeError, json.JSONDecodeError):
             return Response({'error': 'Invalid input, please provide valid JSON with numeric values for distance, time, and surge multiplier'}, status=status.HTTP_400_BAD_REQUEST)
 
 class TripData(APIView):
+
     def post(self, request):
         body = json.loads(request.body)
         user_id = body.get('user_id')
@@ -297,3 +332,51 @@ class TripData(APIView):
             
         serializer = TripSerializer(trips, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TruncHour(Func):
+    function = 'DATE_TRUNC'
+    template = "%(function)s('hour', %(expressions)s)"
+
+class Analytics(APIView):
+
+    def get(self, request):
+        # Total trips by service
+        total_trips = Trips.objects.values('service_name').annotate(count=Count('id')).order_by('-count')
+        
+        # Average price by service
+        avg_price = Trips.objects.values('service_name').annotate(avg_price=Avg('price')).order_by('-avg_price')
+        
+        # Average rating by service
+        avg_rating = Review.objects.values('service_name').annotate(avg_rating=Avg('rating')).order_by('-avg_rating')
+        
+        # Peak usage times
+        peak_usage = Trips.objects.annotate(hour=TruncHour('date')).values('hour').annotate(count=Count('id')).order_by('-count')
+        
+        # Popular routes
+        popular_routes = Trips.objects.values('pickup_location', 'destination_location').annotate(count=Count('id')).order_by('-count')
+        
+        # Service comparison
+        trip_data = Trips.objects.values('service_name').annotate(
+            avg_price=Avg('price'),
+            avg_distance=Avg('distance_km'),
+            avg_duration=Avg('time_minutes')
+        ).order_by('-avg_price')
+        
+        rating_data = Review.objects.values('service_name').annotate(avg_rating=Avg('rating')).order_by('-avg_rating')
+
+        response_data = {
+            'total_trips_by_service': total_trips,
+            'average_price_by_service': avg_price,
+            'average_rating_by_service': avg_rating,
+            'peak_usage_times': peak_usage,
+            'popular_routes': popular_routes,
+            'service_comparison': {
+                'trip_data': trip_data,
+                'rating_data': rating_data
+            }
+        }
+
+        return Response(response_data)
+
+    

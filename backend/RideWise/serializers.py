@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Trips, FavoriteRoute, Review, CabService, Ride, User
+from .models import Trips, FavoriteRoute, Review, CabService
 
 
 class TripSerializer(serializers.ModelSerializer):
@@ -22,12 +22,3 @@ class CabServiceSerializer(serializers.ModelSerializer):
         model = CabService
         fields = '__all__'
 
-class RideSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ride
-        fields = '__all__'
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'

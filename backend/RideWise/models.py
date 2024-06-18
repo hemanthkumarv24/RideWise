@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
+class FavoriteRoute(models.Model):
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    pickup_location = models.CharField(max_length=100)
+    destination_location = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.user_id} - {self.pickup_location} to {self.destination_location}"
 
 class Trips(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
@@ -17,14 +24,6 @@ class Trips(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.pickup_location} to {self.destination_location}"
-
-class FavoriteRoute(models.Model):
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
-    pickup_location = models.CharField(max_length=100)
-    destination_location = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"{self.user_id} - {self.pickup_location} to {self.destination_location}"
 
 class Review(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
@@ -45,15 +44,3 @@ class CabService(models.Model):
 
     def __str__(self):
         return self.service_name
-
-class Ride(models.Model):
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
-    pickup_address = models.CharField(max_length=255)
-    destination = models.CharField(max_length=255)
-    price = models.FloatField()
-    service = models.ForeignKey(CabService, on_delete=models.CASCADE)
-    vehicle_type = models.CharField(max_length=255)
-    ride_date = models.DateField()
-
-    def __str__(self):
-        return f'{self.pickup_address} to {self.destination}'

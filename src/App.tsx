@@ -1,24 +1,11 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import './App.css'
-import './index.css'
+import Navbar from './components/Navbar/Navbar'
+import Location_det from './components/Location_det/Location_det'
 
-
-import Home from './pages/Home'
-
-function App() {
-  // const [count, setCount] = useState(0)
-
-  const router = createBrowserRouter([
-    {
-      children: [
-        { path: "/", element: <Home /> },
-     
-      ]
-    }
-  ])
-
+const App = () => {
   return (
-      <RouterProvider router={router} />
+    <div className='container'><Navbar></Navbar>
+    <div><Location_det/></div></div>
+    
   )
 }
 

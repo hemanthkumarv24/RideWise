@@ -8,17 +8,16 @@ interface NavItems {
 
 const HomeNav: React.FC = () => {
   const navItems: NavItems[] = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
-    { name: 'Sign In', path: '/sign-in' },
-    { name: 'Sign Up', path: '/sign-up' },
+    { name: 'Sign In', path: '/Login' },
   ];
 
   return (
     <nav className="navbar">
       <h2 className="navbar-logo">RideWise</h2>
       <ul className="navbar-list">
+        {/* Render other navbar items here if needed */}
+      </ul>
+      <ul className="navbar-list navbar-right"> {/* Add navbar-right class here */}
         {navItems.map((item, index) => (
           <li key={index} className="navbar-item">
             <NavLink

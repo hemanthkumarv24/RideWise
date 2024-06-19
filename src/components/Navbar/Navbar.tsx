@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom';
 import "./Navbar.css";
 import profile from "../../assets/profile.png";
 const Navbar = () => {
@@ -8,7 +8,7 @@ const Navbar = () => {
       <h1 color="BLACK">RIDEWISE</h1>
       <ul>
         <li>Home</li>
-        <li>About</li>
+        <li><Link to="/About">About</Link></li>
         <li>Data Analysis</li>
       </ul>
       <div>

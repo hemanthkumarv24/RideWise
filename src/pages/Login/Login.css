@@ -14,7 +14,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url('C:\Users\Admin\OneDrive\Desktop\ksit\VI sem\ridewise\src\assets\cab1 (2).jpg'); /* Update with your image path */
+    background-image: url('/workspaces/RideWise/src/assets/cab1 (2).jpg'); /* Update with your image path */
   background-size:cover; /* Cover the entire container */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Don't repeat the image */

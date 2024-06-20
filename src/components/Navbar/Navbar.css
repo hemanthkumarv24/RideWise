@@ -3,8 +3,9 @@
     display:flex;
     align-items: center;
     justify-content: space-between;
-    background-color: rgb(194, 194, 194);
-    padding:2px 2%;
+    background-color: rgb(0, 0, 0);
+    padding:25px 5%;
+    color: white;
 
 }
 h1{
@@ -22,7 +23,7 @@ h1{
 ul{
     flex:1;
     list-style-type:none;
-    text-align:center;
+    text-align:right;
 
 }
 
@@ -36,9 +37,45 @@ ul li{
 
 
 .profile-icon{
+    
     display:flex;
     width:55px;
     cursor: pointer;
-    padding-bottom:0px;
+    padding-bottom:7px;
     
 }
+
+  
+  .dropdown {
+    position: absolute;
+     /* Adjust as necessary */
+   right: 0;
+    min-width: 160px;
+    width: 200px;
+    /* Adjust the width as necessary */
+    background-color: #fffefe;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 10;
+    color: rgb(6, 5, 5);
+    padding: 0% 2;
+    
+  }
+  
+  .dropdown ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #0a0a0a;
+    color: rgb(250, 250, 250); /* Change text color on hover */
+  }

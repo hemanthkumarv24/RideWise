@@ -1,18 +1,44 @@
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
 import "./Navbar.css";
 import profile from "../../assets/profile.png";
+
 const Navbar = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const Menu = ["History", "Fav Routes", "Log Out"];
+
   return (
     <div className="Navbar">
-      {" "}
-      <h1 color="BLACK">RIDEWISE</h1>
+      <h1>RIDEWISE</h1>
       <ul>
         <li>Home</li>
-        <li><Link to="/About">About</Link></li>
-        <li>Data Analysis</li>
+        <li>
+          About
+        </li>
+        <li>Analytics</li>
       </ul>
-      <div>
-        <img className="profile-icon" src={profile} alt="" />
+      <div className="relative">
+        <img
+          className="profile-icon cursor-pointer"
+          src={profile}
+          alt="profile"
+          onClick={toggleDropdown}
+        />
+        {isDropdownOpen && (
+          <div className="dropdown">
+            <ul>
+              {Menu.map((menu, index) => (
+                <li key={index} className="dropdown-item">
+                  {menu}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

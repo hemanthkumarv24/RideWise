@@ -56,7 +56,7 @@
 /* src/Home.css */
 
 .home-container {
-  background-image: url('/workspaces/RideWise/src/assets/cab1 (2).jpg'); /* Update with your image path */
+  background-image: url('src/assets/cab1 (2).jpg'); /* Update with your image path */
   background-size:cover; /* Cover the entire container */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Don't repeat the image */
@@ -65,7 +65,7 @@
   width: 100; /* Ensure it covers the full viewport width */
   display: flex;
   margin-left: -1%;
-  margin-top:-1%;
+  /* margin-top:-1%; */
   flex-direction: column;
   align-items: center;
   justify-content: center;

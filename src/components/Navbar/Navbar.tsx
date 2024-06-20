@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Navbar.css";
 import profile from "../../assets/profile.png";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -9,16 +10,18 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const Menu = ["History", "Fav Routes", "Log Out"];
+  const Menu = ["History", , "Log Out"];
 
   return (
     <div className="Navbar">
       <h1>RIDEWISE</h1>
       <ul>
         <li>Home</li>
+        <Link to="/About">
         <li>
           About
         </li>
+        </Link>
         <li>Analytics</li>
       </ul>
       <div className="relative">

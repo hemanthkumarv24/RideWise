@@ -4,7 +4,7 @@
   top: 0;
   left: 0;
   right: 0;
- /* background-color: #000105; /* Adjust background color as needed */
+  background-color: #000105; /* Adjust background color as needed */
   padding: 20px;
   display: flex;
   align-items: center;
@@ -28,7 +28,7 @@
 }
 
 .navbar-item {
-  margin-left: 700px; /* Adjust margin as needed */
+  margin-left: 20px; /* Adjust margin as needed */
   font-size: larger;
 }
 
@@ -54,55 +54,58 @@
 
 
 /* src/Home.css */
-
 .home-container {
+<<<<<<< Updated upstream
   background-image: url('src/assets/cab1 (2).jpg'); /* Update with your image path */
   background-size:cover; /* Cover the entire container */
+=======
+  background-image: url('/workspaces/RideWise/src/assets/cab1 (2).jpg'); /* Update with your image path */
+  background-size: cover; /* Cover the entire container */
+>>>>>>> Stashed changes
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Don't repeat the image */
   background-color: rgba(0, 0, 0, 0.6);
   height: 100vh; /* Ensure it covers the full viewport height */
-  width: 100; /* Ensure it covers the full viewport width */
+  width: 100vw; /* Ensure it covers the full viewport width */
   display: flex;
+<<<<<<< Updated upstream
   margin-left: -1%;
   /* margin-top:-1%; */
+=======
+>>>>>>> Stashed changes
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center; /* Center text */
+  margin: 0; /* Remove any margin */
 }
 
 .home-content {
   color: rgb(255, 252, 252);
   font-size: 2.5rem;
-  font-style: bold;
+  font-weight: bold;
   margin: 0;
-  margin-left: -10%;
-   margin-top: -30%;
   overflow-y: hidden;
 }
 
-
-
 .justified-text h3 {
-  text-align:center; /* Justify the text within the h3 element */
+  text-align: center; /* Justify the text within the h3 element */
   overflow-y: hidden;
   font-weight: 700;
   margin: 0 auto;
   max-width: 900px;
   color: rgb(182, 115, 26); 
- 
 }
 
 .justified-text h5 {
-  text-align:center; /* Justify the text within the h3 element */
+  text-align: center; /* Justify the text within the h3 element */
   overflow-y: hidden;
   font-style: italic;
   font-weight: 400;
-  margin-left: -10%;
-  margin-top:0;
+  margin: 0 auto;
   max-width: 900px; /* Optional: control the width for better justification */
 }
+
 
 
 /*.button {
@@ -118,4 +121,7 @@
 }
 
 */
+
+/* Resetting -ms-high-constrast (if applicable) */
+
 

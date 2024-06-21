@@ -1,32 +1,16 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import './App.css'
-import './index.css'
+// src/App.tsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MapPage from './pages/MapPage'; // Adjust the path as per your project structure
 
-
-import Home from './pages/Home'
-import Login from './pages/Login/Login'
-import Home2 from './pages/Home2/Home2'
-import About from './pages/About/About'
-
-
-function App() {
-  // const [count, setCount] = useState(0)
-
-
-  const router = createBrowserRouter([
-    {
-      children: [
-        { path: "/", element: <Home /> },
-        { path:"/Login",element:<Login />},
-        { path:"/Home2",element:<Home2 /> },
-        { path:"/About",element:<About /> },
-      ]
-    }
-  ])
-
+const App: React.FC = () => {
   return (
-      <RouterProvider router={router} />
-  )
-}
+    <Router>
+      <Routes>
+        <Route path="/map" element={<MapPage />} />
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;

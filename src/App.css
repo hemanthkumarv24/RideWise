@@ -55,24 +55,16 @@
 
 /* src/Home.css */
 .home-container {
-<<<<<<< Updated upstream
   background-image: url('src/assets/cab1 (2).jpg'); /* Update with your image path */
   background-size:cover; /* Cover the entire container */
-=======
-  background-image: url('/workspaces/RideWise/src/assets/cab1 (2).jpg'); /* Update with your image path */
-  background-size: cover; /* Cover the entire container */
->>>>>>> Stashed changes
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Don't repeat the image */
   background-color: rgba(0, 0, 0, 0.6);
   height: 100vh; /* Ensure it covers the full viewport height */
   width: 100vw; /* Ensure it covers the full viewport width */
   display: flex;
-<<<<<<< Updated upstream
   margin-left: -1%;
   /* margin-top:-1%; */
-=======
->>>>>>> Stashed changes
   flex-direction: column;
   align-items: center;
   justify-content: center;

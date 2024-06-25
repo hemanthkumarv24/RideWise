@@ -4,7 +4,6 @@
   top: 0;
   left: 0;
   right: 0;
-  background-color: #000105; /* Adjust background color as needed */
   padding: 20px;
   display: flex;
   align-items: center;
@@ -22,7 +21,7 @@
 
 .navbar-list {
   list-style-type: none;
-  display: flex;
+  /* display: flex; */
   margin: 0;
   padding: 0;
 }
@@ -50,6 +49,7 @@
 
 .navbar-right {
   margin-left: auto; /* Push items to the right */
+  
 }
 
 
@@ -76,7 +76,7 @@
   color: rgb(255, 252, 252);
   font-size: 2.5rem;
   font-weight: bold;
-  margin: 0;
+  margin-top: -30%;
   overflow-y: hidden;
 }
 

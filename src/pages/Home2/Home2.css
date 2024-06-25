@@ -1,0 +1,9 @@
+.cabim{
+    display: flex;
+    position: fixed; 
+    top: 53%; /* Adjust as needed to vertically center */
+    right: 10pc; /* Positions the image to the right edge of the viewport */
+    transform: translateY(-50%); /* Centers vertically based on its own height */
+    z-index: 999; 
+    width: 39pc;
+}

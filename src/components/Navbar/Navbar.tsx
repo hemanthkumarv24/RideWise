@@ -1,28 +1,37 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import profile from "../../assets/profile.png";
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const Menu = ["History", , "Log Out"];
+  const handleLogout = () => {
+    // Perform any logout operations here, such as clearing user data, etc.
+    navigate("/"); // Navigate to the Login page
+  };
+
+  const Menu = [
+    { name: "History", action: null },
+    { name: "Log Out", action: handleLogout },
+  ];
 
   return (
     <div className="Navbar">
       <h1>RIDEWISE</h1>
       <ul>
-        <li>Home</li>
-        <Link to="/About">
-        <li>
-          About
-        </li>
+        <Link to="/Home2" className="Home">
+          <li>Home</li>
         </Link>
-        <li>Analytics</li>
+        {/* <Link to="/About" className="About">
+          <li>About</li>
+        </Link> */}
+        <li className="Analytics">Analytics</li>
       </ul>
       <div className="relative">
         <img
@@ -35,8 +44,8 @@ const Navbar = () => {
           <div className="dropdown">
             <ul>
               {Menu.map((menu, index) => (
-                <li key={index} className="dropdown-item">
-                  {menu}
+                <li key={index} className="dropdown-item" onClick={menu.action}>
+                  {menu.name}
                 </li>
               ))}
             </ul>

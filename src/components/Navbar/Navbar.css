@@ -9,10 +9,12 @@
 
 }
 h1{
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+     font-family: 'Playwrite NG Modern', cursive;
+     letter-spacing: 10px;
     font-size: xx-large;
     font-weight: 10px;
     font-style: italic;
+    
 }
 
 .logo{
@@ -32,16 +34,18 @@ ul li{
     margin: 10px 20px;
     font-size: 28px;
     cursor: pointer;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: 'Playwrite NG Modern', cursive;
 }
 
 
 .profile-icon{
-    
+    position: absolute;
     display:flex;
     width:55px;
     cursor: pointer;
     padding-bottom:7px;
+    margin-top: -1.8pc;
+
     
 }
 
@@ -49,16 +53,17 @@ ul li{
   .dropdown {
     position: absolute;
      /* Adjust as necessary */
+     top: 6pc;
    right: 0;
-    min-width: 160px;
+    min-width: 150px;
     width: 200px;
     /* Adjust the width as necessary */
     background-color: #fffefe;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    border-radius: 20px;
     z-index: 10;
     color: rgb(6, 5, 5);
-    padding: 0% 2;
+    padding: px ;
     
   }
   
@@ -70,12 +75,58 @@ ul li{
   }
   
   .dropdown-item {
-    padding: 10px;
+    padding: 0px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
   
   .dropdown-item:hover {
     background-color: #0a0a0a;
-    color: rgb(250, 250, 250); /* Change text color on hover */
+    color: rgb(250, 250, 250); 
+    border-radius: 10px;/* Change text color on hover */
+  }
+  .Home {
+    color: rgb(255, 255, 255);            /* Initial text color */
+    text-decoration: none;   /* Remove default underline for links */
+    position: relative;      /* Needed for absolute positioning of the pseudo-element */
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+  }
+  
+  .Home::after {
+    content: '';            /* Create a pseudo-element for the underline */
+    position: absolute;     /* Position the underline relative to its parent */
+    left: 0;                /* Align the underline to the left */
+    bottom: -2px;           /* Move the underline slightly below the text */
+    width: 100%;            /* Full width of the link */
+    height: 2px;            /* Thickness of the underline */
+    background-color: transparent; /* Initial underline color */
+    transition: background-color 0.3s ease; /* Smooth transition for color changes */
+  }
+  
+  .Home:hover::after {
+    background-color: white; /* Change underline color on hover */
+    
+  }
+
+  .Analytics {
+    color: rgb(255, 255, 255);            /* Initial text color */
+    text-decoration: none;   /* Remove default underline for links */
+    position: relative;      /* Needed for absolute positioning of the pseudo-element */
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+  }
+  
+  .Analytics::after {
+    content: '';            /* Create a pseudo-element for the underline */
+    position: absolute;     /* Position the underline relative to its parent */
+    left: 0;                /* Align the underline to the left */
+    bottom: -2px;           /* Move the underline slightly below the text */
+    width: 100%;            /* Full width of the link */
+    height: 2px;            /* Thickness of the underline */
+    background-color: transparent; /* Initial underline color */
+    transition: background-color 0.3s ease; /* Smooth transition for color changes */
+  }
+  
+  .Analytics:hover::after {
+    background-color: white; /* Change underline color on hover */
+    
   }

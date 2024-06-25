@@ -1,0 +1,95 @@
+.compare-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.compare-box {
+  width: 30%;
+  border: 1px solid #ccc;
+  padding: 10px;  /* Ensure proper padding inside the compare box */
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  height: 550px;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.service-logo {
+  width: 70px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.car {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;  /* Space between each car item */
+  cursor: pointer;
+}
+
+.car-img {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.car-details {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;  /* Add some space between details and price */
+}
+
+.service {
+  font-weight: bold;
+  margin-bottom: 5px;  /* Space between service and details */
+}
+
+.details {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 5px;  /* Space between each detail */
+}
+
+.price {
+  font-size: 1.2em;
+  color: #333;
+}
+
+.car:hover {
+  border: 2px solid black;
+  border-radius: 10px;
+}
+
+.Book{
+  
+  align-self: center; /* Center the button horizontally */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  border: 2px solid black;
+  background-color: white;
+  color: #000000;
+  cursor: pointer;
+  font-size: 1em;
+  /* margin-top: 2px; */
+  margin-left: 10pc;
+  transition: background-color 0.3s ease;
+
+}
+
+.Book:hover {
+  background-color: #000000;
+  color: white;
+}
+
+.rapido-logo{
+  width: 65px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+  margin-top: -10px;
+
+
+}

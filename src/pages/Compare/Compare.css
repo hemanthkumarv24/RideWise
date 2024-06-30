@@ -37,6 +37,13 @@
   cursor: pointer;
 }
 
+.car:hover {
+  border: 2px solid #000;
+  border-radius: 10px;
+  background-color: #e0e0e0; /* Highlight selected service */
+}
+
+
 .car.selected {
   border: 2px solid #000;
   border-radius: 10px;

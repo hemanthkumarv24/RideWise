@@ -59,3 +59,31 @@
 
 }
 
+.fav{
+    color: white;
+    margin-top: 20px;
+    margin-left: 40px;
+    align-items: Left;
+    max-width: 45%;
+}
+
+  /* Location_det.css */
+
+.fav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; /* Remove default margin */
+  }
+  
+  .fav ul li {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .fav ul li:hover {
+    background-color: #f0f0f0;
+    color: black;
+  }
+  

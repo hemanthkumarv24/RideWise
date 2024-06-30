@@ -98,8 +98,8 @@ const Login: React.FC = () => {
         email,
       });
       console.log('User created successfully:', response.data);
+      navigate('/dashboard');
       // Automatically login after successful registration (optional)
-      await handleSubmit({ preventDefault: () => {} });
     } catch (error) {
       console.error('Error signing up:', error);
     }
@@ -186,7 +186,7 @@ const Login: React.FC = () => {
                 <input type="checkbox" checked={agreeTerms} onChange={handleAgreeTermsChange} />I agree to the terms & conditions
               </label>
             </div>
-            <button type="submit" disabled={registerDisabled}>
+            <button type="submit" onClick={handleSignup} >
               Register
             </button>
             <div className="register-link">

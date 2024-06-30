@@ -1,4 +1,5 @@
 /* Location.css */
+
 .route-container {
     display: flex;
     flex-direction: column;
@@ -16,13 +17,42 @@
   .info-container {
     text-align: center;
     margin-top: 20px;
-    color:white;
+    color: white;
     font-size: larger;
+    width: 80%; /* Adjust width as needed */
+  }
+  
+  .details-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .details-container p {
+    margin: 0;
+    white-space: nowrap; /* Prevent line break */
+  }
+  
+  .distance {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+  
+  .duration {
+    flex: 1;
+    text-align: right;
   }
   
   .compare-button {
     padding: 10px 20px;
-    /* background-color: #3887be; */
     height: 40px;
     color: rgb(0, 0, 0);
     border: none;
@@ -36,25 +66,3 @@
     background-color: #e0ca3b;
   }
   
-
-  .Book{
-  
-    align-self: center; /* Center the button horizontally */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    border: 2px solid black;
-    background-color: white;
-    color: #000000;
-    cursor: pointer;
-    font-size: 1em;
-    /* margin-top: 2px; */
-    margin-left: 10pc;
-    transition: background-color 0.3s ease;
-  
-  }
-  
-  .Book:hover {
-    background-color: #000000;
-    color: white;
-  }

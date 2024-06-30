@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import './Location.css';
 import { Button } from 'antd';
+import { useAuth } from '../../context/AuthContext';
+import axios from 'axios';
 // import Navbar from '../Navbar/Navbar';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiaGFtemF6YWlkaSIsImEiOiJja3ZtY3RodzgwNGdlMzBwaWdjNWx5cTQ3In0.2s32bZnlSY-Qg5PFmoLrJw';
@@ -15,10 +17,18 @@ interface LocationState {
 const Route: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { user } = useAuth();
+
   const navigate = useNavigate();
   const { pickupLocation, destinationLocation } = location.state as LocationState;
   const [distance, setDistance] = useState<number | null>(null);
   const [duration, setDuration] = useState<number | null>(null);
+  const [addToFav, setAddToFav] = useState(false);
+
+  const handleCheckboxChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
+    setAddToFav(e.target.checked);
+  };
+
 
   const getCoordinates = async (location: string) => {
     const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxgl.accessToken}`);
@@ -91,12 +101,25 @@ const Route: React.FC = () => {
     }
   }, [pickupLocation, destinationLocation]);
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    if (addToFav && user) {
+      try {
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/favorite_routes/`, {
+          user_id: user.user_id,
+          pickup_location: pickupLocation,
+          destination_location: destinationLocation,
+        });
+      } catch (error) {
+        console.error('Error adding favorite route:', error);
+      }
+    }
+
     navigate('/compare', {
       state: {
         distance: distance !== null ? (distance / 1000).toFixed(2) : null,
         duration: duration !== null ? (duration / 60).toFixed(2) : null,
-        pickupLocation,destinationLocation,
+        pickupLocation,
+        destinationLocation,
       },
     });
   };
@@ -105,18 +128,23 @@ const Route: React.FC = () => {
     <>
       {/* <div><Navbar /></div> */}
 
-    <div className="route-container">
-      <div ref={mapContainer} className="map-container" />
-      <div className="info-container">
-        {distance !== null && duration !== null && (
-          <>
-            <p>Estimated Distance: {(distance / 1000).toFixed(2)} km</p>
-            <p>Estimated Duration: {(duration / 60).toFixed(2)} minutes</p>
-          </>
-        )}
-        <Button className="compare-button" onClick={handleClick}>Click to See Prices</Button>
+      <div className="route-container">
+  <div ref={mapContainer} className="map-container" />
+  <div className="info-container">
+    {distance !== null && duration !== null && (
+      <div className="details-container">
+        <p className="distance">Estimated Distance: {(distance / 1000).toFixed(2)} km</p>
+        <div className="checkbox-container">
+          <input type="checkbox" id="fav-route"  onChange={handleCheckboxChange} />
+          <label htmlFor="fav-route">Add this Route as ur Fav route</label>
+        </div>
+        <p className="duration">Estimated Duration: {(duration / 60).toFixed(2)} minutes</p>
       </div>
-    </div>
+    )}
+    <Button className="compare-button" onClick={handleClick}>Click to See Prices</Button>
+  </div>
+</div>
+
 </>
   );
 };

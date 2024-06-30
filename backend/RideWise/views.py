@@ -25,30 +25,47 @@ from datetime import datetime, timedelta
 class FavoriteRouteViewSet(APIView):
     def post(self, request):
         user_id = request.data.get('user_id')
+        pickup_location = request.data.get('pickup_location')
+        destination_location = request.data.get('destination_location')
+        
         try:
+            # Check if user exists
             user_exists = User.objects.filter(id=user_id).exists()
             if not user_exists:
                 return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-                
+            
+            # Check if the route already exists for the user
+            route_exists = FavoriteRoute.objects.filter(
+                user_id=user_id,
+                pickup_location=pickup_location,
+                destination_location=destination_location
+            ).exists()
+            
+            if route_exists:
+                return Response({'error': 'Route already exists'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Validate and save the new route
             serializer = FavoriteRouteSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    def get(self, request):
-        user_id = request.data.get('user_id')
-        try:
-            favorite_route = FavoriteRoute.objects.get(user_id=user_id)
-            serializer = FavoriteRouteSerializer(favorite_route)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except FavoriteRoute.DoesNotExist:
-            return Response({'error': 'Favorite route not found'}, status=status.HTTP_404_NOT_FOUND)
+        
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    
+    def get(self, request):
+        user_id = request.query_params.get('user_id')
+        try:
+            # Fetch all favorite routes for the given user_id
+            favorite_routes = FavoriteRoute.objects.filter(user_id=user_id)
+            serializer = FavoriteRouteSerializer(favorite_routes, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except FavoriteRoute.DoesNotExist:
+            return Response({'error': 'Favorite routes not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ReviewViewSet(APIView):

@@ -138,7 +138,7 @@ const Login: React.FC = () => {
               </label>
               <a href="#">Forgot Password?</a>
             </div>
-            <button type="submit" disabled={loginDisabled}>
+            <button type="submit" >
               Login
             </button>
             <div className="register-link">

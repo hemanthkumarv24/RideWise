@@ -1,0 +1,9 @@
+/* src/pages/MapPage.css */
+.marker-icon {
+    width: 30px;
+    height: 30px;
+    background-image: url('src/assets/location.png'); /* Replace with the path to your marker icon */
+    background-size: cover;
+    background-position: center;
+  }
+  

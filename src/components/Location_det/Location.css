@@ -1,0 +1,60 @@
+/* Location.css */
+.route-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+  }
+  
+  .map-container {
+    width: 100%;
+    height: 70%;
+  }
+  
+  .info-container {
+    text-align: center;
+    margin-top: 20px;
+    color:white;
+    font-size: larger;
+  }
+  
+  .compare-button {
+    padding: 10px 20px;
+    /* background-color: #3887be; */
+    height: 40px;
+    color: rgb(0, 0, 0);
+    border: none;
+    font-size: larger;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .compare-button:hover {
+    background-color: #e0ca3b;
+  }
+  
+
+  .Book{
+  
+    align-self: center; /* Center the button horizontally */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    border: 2px solid black;
+    background-color: white;
+    color: #000000;
+    cursor: pointer;
+    font-size: 1em;
+    /* margin-top: 2px; */
+    margin-left: 10pc;
+    transition: background-color 0.3s ease;
+  
+  }
+  
+  .Book:hover {
+    background-color: #000000;
+    color: white;
+  }

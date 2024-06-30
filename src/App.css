@@ -117,3 +117,20 @@
 /* Resetting -ms-high-constrast (if applicable) */
 
 
+
+/* src/pages/MapPage.css */
+.fixed-marker {
+  width: 30px;
+  height: 30px;
+  background-image: url('src/assets/location.png'); /* Replace with the path to your marker icon */
+  background-size: cover;
+  background-position: center;
+}
+
+.marker-icon {
+  width: 30px;
+  height: 30px;
+  background-image: url('src/assets/location.png'); /* Replace with the path to your marker icon */
+  background-size: cover;
+  background-position: center;
+}

@@ -25,7 +25,7 @@ const Navbar = () => {
     <div className="Navbar">
       <h1>RIDEWISE</h1>
       <ul>
-        <Link to="/Home2" className="Home">
+        <Link to="/dashboard" className="Home">
           <li>Home</li>
         </Link>
         {/* <Link to="/About" className="About">

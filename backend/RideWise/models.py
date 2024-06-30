@@ -15,7 +15,7 @@ class Trips(models.Model):
     pickup_location = models.CharField(max_length=100)
     destination_location = models.CharField(max_length=100)
     distance_km = models.DecimalField(max_digits=10, decimal_places=2)
-    time_minutes = models.IntegerField()
+    time_minutes = models.FloatField()
     surge_multiplier = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField(auto_now_add=True)
     service_name = models.CharField(max_length=100)
@@ -29,7 +29,7 @@ class Review(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     service_name = models.CharField(max_length=100)
     service_id = models.CharField(max_length=100)  # New field
-    rating = models.IntegerField()
+    rating = models.FloatField()
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

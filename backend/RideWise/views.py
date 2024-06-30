@@ -126,9 +126,10 @@ class Signup(APIView):
         except Exception as e:
             return Response({'error': f'Failed to create user: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class Login(APIView):
     def post(self, request):
+        print(request)
         body = json.loads(request.body)
         username = body.get('username')
         password = body.get('password')

@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Login: React.FC = () => {
   const [action, setAction] = useState('');
@@ -11,6 +13,8 @@ const Login: React.FC = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loginDisabled, setLoginDisabled] = useState(true);
   const [registerDisabled, setRegisterDisabled] = useState(true);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const registerLink = () => {
     setAction(' active');
@@ -23,63 +27,89 @@ const Login: React.FC = () => {
   // Function to handle username input change
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
-    updateLoginButtonState(e.target.value, password);
+    updateButtonStates();
   };
 
   // Function to handle email input change and validate format
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const emailValue = e.target.value;
-    setEmail(emailValue);
-    updateRegisterButtonState(username, emailValue, password, agreeTerms);
+    setEmail(e.target.value);
+    updateButtonStates();
   };
 
   // Function to handle password input change and validate strength
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const passwordValue = e.target.value;
-    setPassword(passwordValue);
-    updateLoginButtonState(username, passwordValue);
-    updateRegisterButtonState(username, email, passwordValue, agreeTerms);
+    setPassword(e.target.value);
+    updateButtonStates();
   };
 
   // Function to handle terms agreement checkbox change
   const handleAgreeTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAgreeTerms(e.target.checked);
-    updateRegisterButtonState(username, email, password, e.target.checked);
+    updateButtonStates();
   };
 
-  // Function to update login button disabled state based on input validity
-  const updateLoginButtonState = (user: string, pass: string) => {
-    if (user.trim() !== '' && pass.trim() !== '') {
+  // Function to update login and register button disabled state based on input validity
+  const updateButtonStates = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const strongPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+
+    // Login button state
+    if (username.trim() !== '' && password.trim() !== '') {
       setLoginDisabled(false);
     } else {
       setLoginDisabled(true);
     }
-  };
 
-  // Function to update register button disabled state based on input validity
-  const updateRegisterButtonState = (user: string, mail: string, pass: string, terms: boolean) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const strongPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-
-    if (user.trim() !== '' && emailRegex.test(mail) && strongPasswordRegex.test(pass) && terms) {
+    // Register button state
+    if (
+      username.trim() !== '' &&
+      emailRegex.test(email) &&
+      strongPasswordRegex.test(password) &&
+      agreeTerms
+    ) {
       setRegisterDisabled(false);
     } else {
       setRegisterDisabled(true);
     }
   };
 
-  // Function to check if password meets strong criteria for login
-  const isPasswordStrongForLogin = (pass: string) => {
-    // Adjust as per your login password strength criteria
-    const strongPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    return strongPasswordRegex.test(pass);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/login/`, {
+        username,
+        password,
+      });
+      const userData = response.data; // Assuming API response includes user data
+      login(userData); // Store user data in context
+      console.log(userData)
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error logging in:', error);
+    }
+  };
+
+  const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/signup/`, {
+        username,
+        password,
+        email,
+      });
+      console.log('User created successfully:', response.data);
+      // Automatically login after successful registration (optional)
+      await handleSubmit({ preventDefault: () => {} });
+    } catch (error) {
+      console.error('Error signing up:', error);
+    }
   };
 
   return (
     <div className="login-page">
       <div className={`wrapper ${action}`}>
         <div className="form-box login">
-          <form action="">
+          <form onSubmit={handleSubmit}>
             <h1>Login</h1>
             <div className="input-box">
               <input
@@ -106,13 +136,11 @@ const Login: React.FC = () => {
               <label>
                 <input type="checkbox" />Remember me
               </label>
-              <a href="#">Forgot Password ?</a>
+              <a href="#">Forgot Password?</a>
             </div>
-            <Link to="/home2">
-              <button type="submit" disabled={loginDisabled || !isPasswordStrongForLogin(password)}>
-                Login
-              </button>
-            </Link>
+            <button type="submit" disabled={loginDisabled}>
+              Login
+            </button>
             <div className="register-link">
               <p>
                 Don't have an account? <a href="#" onClick={registerLink}>Register</a>
@@ -121,7 +149,7 @@ const Login: React.FC = () => {
           </form>
         </div>
         <div className="form-box register">
-          <form action="">
+          <form onSubmit={handleSignup}>
             <h1>Registration</h1>
             <div className="input-box">
               <input
@@ -158,11 +186,9 @@ const Login: React.FC = () => {
                 <input type="checkbox" checked={agreeTerms} onChange={handleAgreeTermsChange} />I agree to the terms & conditions
               </label>
             </div>
-            <Link to="/home2">
-              <button type="submit" disabled={registerDisabled}>
-                Register
-              </button>
-            </Link>
+            <button type="submit" disabled={registerDisabled}>
+              Register
+            </button>
             <div className="register-link">
               <p>
                 Already have an account? <a href="#" onClick={loginLink}>Login</a>
@@ -176,3 +202,9 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
+// Function to check if password meets strong criteria for login
+const isPasswordStrongForLogin = (pass: string) => {
+  const strongPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+  return strongPasswordRegex.test(pass);
+};

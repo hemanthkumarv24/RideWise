@@ -98,7 +98,7 @@ const Login: React.FC = () => {
         email,
       });
       console.log('User created successfully:', response.data);
-      navigate('/dashboard');
+      navigate('/login');
       // Automatically login after successful registration (optional)
     } catch (error) {
       console.error('Error signing up:', error);

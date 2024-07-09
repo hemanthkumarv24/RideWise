@@ -12,6 +12,7 @@ import { LocationProvider } from "./components/Location_det/LocationContext";
 import Route from "./components/Location_det/Route";
 import { AuthProvider } from "./context/AuthContext";
 import Analytics from "./pages/Analytics";
+import History from "./pages/History";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -27,6 +28,8 @@ function App() {
         { path: "/map", element: <MapPage /> },
         { path: "/route", element: <Route pickup={""} destination={""} /> },
         { path: "/analytics", element: <Analytics /> },
+        { path: "/history", element: <History /> },
+
       ],
     },
   ]);

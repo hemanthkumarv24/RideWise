@@ -16,8 +16,13 @@ const Navbar = () => {
     navigate("/"); // Navigate to the Login page
   };
 
+  const handleHistory = () => {
+    // Perform any logout operations here, such as clearing user data, etc.
+    navigate("/history"); // Navigate to the Login page
+  };
+
   const Menu = [
-    { name: "History", action: null },
+    { name: "History", action: handleHistory },
     { name: "Log Out", action: handleLogout },
   ];
 

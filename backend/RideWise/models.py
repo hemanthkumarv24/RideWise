@@ -28,7 +28,7 @@ class Trips(models.Model):
 class Review(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     service_name = models.CharField(max_length=100)
-    service_id = models.CharField(max_length=100)  # New field
+    vehicle_type = models.CharField(max_length=100)  # New field
     rating = models.FloatField()
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

@@ -15,11 +15,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from django.db.models import Count, Avg, Func
-
+from django.utils.timezone import localtime
 from django.contrib.auth import get_user_model
 from random import randint, uniform, choice
 import decimal
 from datetime import datetime, timedelta
+from django.utils import timezone
+from django.db.models.functions import ExtractHour
 
 
 class FavoriteRouteViewSet(APIView):
@@ -190,12 +192,6 @@ OLA_PRICING = {
 }
 
 # Namma Yatri Pricing
-NAMMA_YATRI_PRICING = {
-    'non_ac_mini': {'base_rate': 35, 'per_km_rate': 12, 'per_min_rate': 1.2, 'operating_fee': 15},
-    'ac_mini': {'base_rate': 45, 'per_km_rate': 15, 'per_min_rate': 1.5, 'operating_fee': 20},
-    'sedan': {'base_rate': 55, 'per_km_rate': 18, 'per_min_rate': 2, 'operating_fee': 25},
-    'xl_cab': {'base_rate': 75, 'per_km_rate': 22, 'per_min_rate': 2.5, 'operating_fee': 30},
-}
 
 # Rapido Pricing
 RAPIDO_PRICING = {
@@ -203,6 +199,12 @@ RAPIDO_PRICING = {
     'bike': {'base_rate': 15, 'per_km_rate': 5, 'per_min_rate': 0.5, 'operating_fee': 5},
 }
 
+NAMMA_YATRI_PRICING = {
+    'non_ac_mini': {'base_rate': 35, 'per_km_rate': 12, 'per_min_rate': 1.2, 'operating_fee': 15},
+    'ac_mini': {'base_rate': 45, 'per_km_rate': 15, 'per_min_rate': 1.5, 'operating_fee': 20},
+    'sedan': {'base_rate': 55, 'per_km_rate': 18, 'per_min_rate': 2, 'operating_fee': 25},
+    'xl_cab': {'base_rate': 75, 'per_km_rate': 22, 'per_min_rate': 2.5, 'operating_fee': 30},
+}
 DEFAULT_SURGE_MULTIPLIER = 1.0
 def calculate_fare(pricing, distance_km, time_min, surge_multiplier=DEFAULT_SURGE_MULTIPLIER):
     base_rate = pricing['base_rate']
@@ -368,10 +370,35 @@ class Analytics(APIView):
         # Average rating by service
         avg_rating = Review.objects.values('service_name').annotate(avg_rating=Avg('rating')).order_by('-avg_rating')
         
+        service_usage_by_vehicle = Trips.objects.values('service_name', 'vehicle_type').annotate(count=Count('id')).order_by('-count')
         # Peak usage times
-        peak_usage = Trips.objects.annotate(hour=TruncHour('date')).values('hour').annotate(count=Count('id')).order_by('-count')
+        peak_usage = Trips.objects.annotate(hour=ExtractHour('date')) \
+                                  .values('service_name', 'hour') \
+                                  .annotate(count=Count('id')) \
+                                  .order_by('service_name', 'hour')
         
-        # Popular routes
+        # Initialize a dictionary to store counts per hour per service
+        service_counts = {service_name: {hour: 0 for hour in range(24)} for service_name in ['Ola', 'Uber', 'Rapido']}
+        
+        # Populate hour counts with actual data
+        for item in peak_usage:
+            service_name = item['service_name']
+            hour = item['hour']
+            service_counts[service_name][hour] = item['count']
+        
+        # Format peak usage times for display
+        formatted_peak_usage = []
+        for service_name, counts_per_hour in service_counts.items():
+            for hour, count in counts_per_hour.items():
+                formatted_peak_usage.append({
+                    'service_name': service_name,
+                    'hour': f'{hour:02d}:00',
+                    'count': count
+                })
+        
+        
+        average_ratings = Review.objects.values('service_name').annotate(avg_rating=Avg('rating')).order_by('-avg_rating')
+
         popular_routes = Trips.objects.values('pickup_location', 'destination_location').annotate(count=Count('id')).order_by('-count')
         
         # Service comparison
@@ -389,6 +416,9 @@ class Analytics(APIView):
             'average_rating_by_service': avg_rating,
             'peak_usage_times': peak_usage,
             'popular_routes': popular_routes,
+            'peak_usage_times_per_service': formatted_peak_usage,
+            'service_usage_by_vehicle': service_usage_by_vehicle,
+            'average_ratings':average_ratings,
             'service_comparison': {
                 'trip_data': trip_data,
                 'rating_data': rating_data

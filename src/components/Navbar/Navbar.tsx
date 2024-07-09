@@ -31,7 +31,9 @@ const Navbar = () => {
         {/* <Link to="/About" className="About">
           <li>About</li>
         </Link> */}
-        <li className="Analytics">Analytics</li>
+        <Link to="/analytics">
+          <li className="Analytics">Analytics</li>
+        </Link>
       </ul>
       <div className="relative">
         <img

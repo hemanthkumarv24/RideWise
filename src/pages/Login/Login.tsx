@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import './Login.css';
-import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState } from "react";
+import "./Login.css";
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const Login: React.FC = () => {
-  const [action, setAction] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [action, setAction] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loginDisabled, setLoginDisabled] = useState(true);
   const [registerDisabled, setRegisterDisabled] = useState(true);
@@ -17,11 +17,11 @@ const Login: React.FC = () => {
   const { login } = useAuth();
 
   const registerLink = () => {
-    setAction(' active');
+    setAction(" active");
   };
 
   const loginLink = () => {
-    setAction('');
+    setAction("");
   };
 
   // Function to handle username input change
@@ -51,10 +51,11 @@ const Login: React.FC = () => {
   // Function to update login and register button disabled state based on input validity
   const updateButtonStates = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const strongPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    const strongPasswordRegex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
     // Login button state
-    if (username.trim() !== '' && password.trim() !== '') {
+    if (username.trim() !== "" && password.trim() !== "") {
       setLoginDisabled(false);
     } else {
       setLoginDisabled(true);
@@ -62,7 +63,7 @@ const Login: React.FC = () => {
 
     // Register button state
     if (
-      username.trim() !== '' &&
+      username.trim() !== "" &&
       emailRegex.test(email) &&
       strongPasswordRegex.test(password) &&
       agreeTerms
@@ -76,32 +77,39 @@ const Login: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/login/`, {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/login/`,
+        {
+          username,
+          password,
+        }
+      );
       const userData = response.data; // Assuming API response includes user data
       login(userData); // Store user data in context
-      console.log(userData)
-      navigate('/dashboard');
+      console.log(userData);
+      navigate("/dashboard");
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error("Error logging in:", error);
     }
   };
 
   const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/signup/`, {
-        username,
-        password,
-        email,
-      });
-      console.log('User created successfully:', response.data);
-      navigate('/dashboard');
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/signup/`,
+        {
+          username,
+          password,
+          email,
+        }
+      );
+      console.log("User created successfully:", response.data);
+      navigate("/login#");
+      loginLink();
       // Automatically login after successful registration (optional)
     } catch (error) {
-      console.error('Error signing up:', error);
+      console.error("Error signing up:", error);
     }
   };
 
@@ -128,22 +136,26 @@ const Login: React.FC = () => {
                 required
                 value={password}
                 onChange={handlePasswordChange}
-                className={!isPasswordStrongForLogin(password) ? 'weak-password' : ''}
+                className={
+                  !isPasswordStrongForLogin(password) ? "weak-password" : ""
+                }
               />
               <FaLock className="icon" />
             </div>
             <div className="remember-forgot">
               <label>
-                <input type="checkbox" />Remember me
+                <input type="checkbox" />
+                Remember me
               </label>
               <a href="#">Forgot Password?</a>
             </div>
-            <button type="submit" >
-              Login
-            </button>
+            <button type="submit">Login</button>
             <div className="register-link">
               <p>
-                Don't have an account? <a href="#" onClick={registerLink}>Register</a>
+                Don't have an account?{" "}
+                <a href="#" onClick={registerLink}>
+                  Register
+                </a>
               </p>
             </div>
           </form>
@@ -183,15 +195,23 @@ const Login: React.FC = () => {
             </div>
             <div className="remember-forgot">
               <label>
-                <input type="checkbox" checked={agreeTerms} onChange={handleAgreeTermsChange} />I agree to the terms & conditions
+                <input
+                  type="checkbox"
+                  checked={agreeTerms}
+                  onChange={handleAgreeTermsChange}
+                />
+                I agree to the terms & conditions
               </label>
             </div>
-            <button type="submit" onClick={handleSignup} >
+            <button type="submit" onClick={handleSignup}>
               Register
             </button>
             <div className="register-link">
               <p>
-                Already have an account? <a href="#" onClick={loginLink}>Login</a>
+                Already have an account?{" "}
+                <a href="#" onClick={loginLink}>
+                  Login
+                </a>
               </p>
             </div>
           </form>
@@ -205,6 +225,7 @@ export default Login;
 
 // Function to check if password meets strong criteria for login
 const isPasswordStrongForLogin = (pass: string) => {
-  const strongPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+  const strongPasswordRegex =
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   return strongPasswordRegex.test(pass);
 };

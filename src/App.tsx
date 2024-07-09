@@ -11,6 +11,7 @@ import MapPage from "./pages/MapPage"; // Adjust the path as per your project st
 import { LocationProvider } from "./components/Location_det/LocationContext";
 import Route from "./components/Location_det/Route";
 import { AuthProvider } from "./context/AuthContext";
+import Analytics from "./pages/Analytics";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -24,17 +25,18 @@ function App() {
         { path: "/About", element: <About /> },
         { path: "/Compare", element: <ComparePage /> },
         { path: "/map", element: <MapPage /> },
-        { path: "/route", element: <Route pickup={""} destination={""}/> },
+        { path: "/route", element: <Route pickup={""} destination={""} /> },
+        { path: "/analytics", element: <Analytics /> },
       ],
     },
   ]);
 
   return (
     <AuthProvider>
-    <LocationProvider>
-  <RouterProvider router={router} />
-  </LocationProvider>
-  </AuthProvider>
+      <LocationProvider>
+        <RouterProvider router={router} />
+      </LocationProvider>
+    </AuthProvider>
   );
 }
 

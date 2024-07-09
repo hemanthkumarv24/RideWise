@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,25 +76,29 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+import environ
+import os
 
+# Initialise environment variables
+env = environ.Env(
+    # Set default values and casting
+    DEBUG=(bool, False)
+)
+
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Database settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'RideWise',  
-        # 'USER': 'postgres', 
-        # 'PASSWORD': 'postgres', 
-        # 'HOST': 'ridewise.c7swquu8mbvx.ap-southeast-2.rds.amazonaws.com', 
-        # 'PORT': '5432',  
-        'NAME': 'RideWise',  
-        'USER': 'postgres', 
-        'PASSWORD': '19oct2003', 
-        'HOST': 'localhost', 
-        'PORT': '5432',  
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

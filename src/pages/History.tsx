@@ -74,11 +74,11 @@ const History = () => {
             dataIndex: 'time_minutes',
             key: 'time_minutes',
         },
-        {
-            title: 'Surge Multiplier',
-            dataIndex: 'surge_multiplier',
-            key: 'surge_multiplier',
-        },
+        // {
+        //     title: 'Surge Multiplier',
+        //     dataIndex: 'surge_multiplier',
+        //     key: 'surge_multiplier',
+        // },
     ];
 
     // Handle pagination change

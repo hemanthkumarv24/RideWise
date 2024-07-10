@@ -99,7 +99,7 @@ const Analytics = () => {
           justifyContent: "center",
           marginTop: "20px",
         }}>
-          <Row gutter={16} style={{width : "79%"}}>
+          <Row gutter={16} style={{width : "80%"}}>
             <Col xs={24} md={12} lg={12} xl={12}>
               <Card style={{
           minHeight:'100%',
@@ -124,7 +124,7 @@ const Analytics = () => {
           justifyContent: "center",
           marginTop: "20px",
         }}>
-          <Row gutter={16} style={{width : "79%"}}>
+          <Row gutter={16} style={{width : "80%"}}>
             <Col xs={24} md={12} lg={12} xl={12}>
               <Card style={{
           minHeight:'100%',

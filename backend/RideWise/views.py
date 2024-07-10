@@ -127,7 +127,6 @@ class CabServiceViewSet(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 class Signup(APIView):
     def post(self, request):
         username = request.data.get('username')
@@ -138,13 +137,12 @@ class Signup(APIView):
             return Response({'error': 'Please provide username, password, and email'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user = User.objects.create_user(username=username, email=email)
-            user.set_password(password)
-            user.save()
+            # Create the user
+            user = User.objects.create_user(username=username, email=email, password=password)
+            
             return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': f'Failed to create user: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 # @method_decorator(csrf_exempt, name='dispatch')
 class Login(APIView):
     def post(self, request):

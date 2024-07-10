@@ -2,7 +2,7 @@ import axios from "axios";
 import { SetStateAction, useEffect, useState } from "react";
 import { useAuth } from '../context/AuthContext';
 import Navbar from "../components/Navbar/Navbar";
-import { Table } from 'antd';
+import { Table,Card } from 'antd';
 
 const History = () => {
     const { user } = useAuth();
@@ -36,7 +36,9 @@ const History = () => {
             dataIndex: 'date',
             key: 'date',
             render: (date: string | number | Date) => new Date(date).toLocaleString(),
-        },
+            sorter: (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+            defaultSortOrder: 'descend', // Sort descending by default
+          },
         {
             title: 'Pickup Location',
             dataIndex: 'pickup_location',
@@ -90,7 +92,7 @@ const History = () => {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "20px", color: 'white' }}>
                 <h1>Welcome, <span style={{ color: 'yellow' }}>{user?.username}</span>!</h1>
                 <h3 style={{ marginTop: '10px', marginBottom: '10px' }}>Here is your Recent Trip data</h3>
-                <div style={{ width: "80%" }}>
+                <Card style={{ width: "80%" }}>
                     <Table
                         columns={columns}
                         dataSource={data}
@@ -98,7 +100,7 @@ const History = () => {
                         pagination={pagination}
                         onChange={handleTableChange}
                     />
-                </div>
+                </Card>
             </div>
         </div>
     );

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Compare.css';
 import { motion } from 'framer-motion';
 import Navbar from '../../components/Navbar/Navbar';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 
@@ -160,17 +160,16 @@ const rapidoCarList: Car[] = [
 ];
 
 
-
-
 const ComparePage: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { distance, duration, pickupLocation, destinationLocation } = location.state;
   const { user } = useAuth();
   const [ola, setOla] = useState<Car[]>([]);
   const [uber, setUber] = useState<Car[]>([]);
   const [rapido, setRapido] = useState<Car[]>([]);
   const [selectedService, setSelectedService] = useState<any | null>(null);
-  console.log(selectedService)
+  
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
@@ -207,9 +206,7 @@ const ComparePage: React.FC = () => {
 
   const handleBookNow = async () => {
     if (selectedService && user) {
-      let serviceType = selectedService.split(' ')[1]; // Extract service type (auto, go, premier, etc.)
-      let service_name = selectedService.split(' ')[0]; // Extract service name (Uber, Ola, Rapido)
-      let fare = selectedService.split(' ')[2]; // Extract fare
+      let [serviceName, serviceType, fare] = selectedService.split(' ');
       const payload = {
         user_id: user.user_id,
         pickup_location: pickupLocation,
@@ -217,22 +214,31 @@ const ComparePage: React.FC = () => {
         distance_km: distance,
         time_minutes: duration,
         surge_multiplier: 1.5,
-        service_name: service_name,
+        service_name: serviceName,
         vehicle_type: serviceType,
         price: fare
       };
 
-      console.log(payload)
-
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/trips/`, payload);
         console.log('Booking response:', response.data);
-        // Handle success (e.g., show a success message or redirect)
+        // Redirect to the specific service's website
+        const serviceUrls: { [key: string]: string } = {
+          'Uber': 'https://www.uber.com',
+          'Ola': 'https://www.olacabs.com',
+          'Rapido': 'https://www.rapido.bike'
+        };
+        window.open(serviceUrls[serviceName], '_blank');
+        // Navigate to the dashboard on the current tab
+        navigate('/dashboard');
       } catch (error) {
         console.error('Error booking service:', error);
-        // Handle error (e.g., show an error message)
       }
     }
+  };
+
+  const handleCancelRide = () => {
+    navigate('/dashboard');
   };
 
   return (
@@ -307,17 +313,26 @@ const ComparePage: React.FC = () => {
           </div>
         </div>
 
-        <button
-          className="Book"
-          disabled={!selectedService}
-          onClick={handleBookNow}
-        >
-          {selectedService ? `Book ${selectedService}` : 'BOOK'}
-        </button>
+        <div className="button-container">
+          <button
+            className="book"
+            disabled={!selectedService}
+            onClick={handleBookNow}
+          >
+            {selectedService ? `Book ${selectedService}` : 'BOOK'}
+          </button>
+          {selectedService && (
+            <button
+              className="cancel"
+              onClick={handleCancelRide}
+            >
+              Cancel Ride
+            </button>
+          )}
+        </div>
       </motion.div>
     </>
   );
 };
-
 
 export default ComparePage;

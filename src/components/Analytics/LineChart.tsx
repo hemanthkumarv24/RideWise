@@ -8,6 +8,7 @@ const LineChart = ({ data }) => {
 
     const serviceNames = ['Ola', 'Uber', 'Rapido'];
     const colors = ['#FF6384', '#36A2EB', '#FFCE56'];
+    const backgroundColors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'];
 
     const datasets = serviceNames.map((serviceName, index) => {
         const serviceData = data
@@ -22,8 +23,9 @@ const LineChart = ({ data }) => {
             label: serviceName,
             data: serviceData,
             borderColor: colors[index],
-            backgroundColor: colors[index],
-            fill: false,
+            backgroundColor: backgroundColors[index],
+            fill: true, // Set this to true to enable fill
+            tension: 0.4, // Create curves
         };
     });
 
@@ -48,7 +50,7 @@ const LineChart = ({ data }) => {
         },
         elements: {
             line: {
-                fill: true, // Ensure lines are not filled
+                fill: true, // Ensure lines are filled
             },
         },
     };

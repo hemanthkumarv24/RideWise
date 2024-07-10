@@ -134,3 +134,12 @@
   background-size: cover;
   background-position: center;
 }
+/* styles.css (or your preferred CSS file) */
+
+
+.ant-pagination-item {
+  border-radius: 4px; /* Rounded corners for pagination items */
+  background-color: #d3e137; /* Background color of pagination items */
+  border: 1px solid #d3e137; /* Border color of pagination items */
+  font-size: 18px; /* Font size of pagination items */
+}

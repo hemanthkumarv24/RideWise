@@ -2,15 +2,16 @@
 
 import React from 'react';
 import HomeNav from '../components/HomeNav';
+import About from '../components/About';
 
 const Home: React.FC = () => {
   
   return (
     
     <div className="home-container">
-      <HomeNav />
-        <div className='home-content'>
-        <div className="justified-text">
+        <HomeNav />
+    <div className='home-content'>
+      <div className="justified-text">
         <h3>
           Search and Compare cabs from 
            <br />Uber, Ola and Rapido  
@@ -20,6 +21,7 @@ const Home: React.FC = () => {
       
       </div>
     </div>
+    {/* <About/> */}
     </div>
 
   );

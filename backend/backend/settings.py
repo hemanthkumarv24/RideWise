@@ -76,7 +76,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-import environ
 import os
 
 # Initialise environment variables

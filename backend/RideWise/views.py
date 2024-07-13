@@ -30,7 +30,7 @@ class FavoriteRouteViewSet(APIView):
         
         try:
             # Check if user exists
-            user_exists = User.objects.filter(id=user_id).exists()
+            user_exists = User.objects.filter(user_id=user_id).exists()
             if not user_exists:
                 return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
             

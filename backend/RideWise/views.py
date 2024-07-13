@@ -1,6 +1,6 @@
 from rest_framework import viewsets,status
-from .models import  Trips, FavoriteRoute, Review,CabService
-from .serializers import TripSerializer, FavoriteRouteSerializer, ReviewSerializer, CabServiceSerializer
+from .models import  Trips, FavoriteRoute, Review,CabService, User
+from .serializers import TripSerializer, FavoriteRouteSerializer, ReviewSerializer, CabServiceSerializer,UserSerializer
 from django.conf import settings
 from django.views import View
 import requests
@@ -11,12 +11,10 @@ from urllib.parse import urlencode
 from django.utils.decorators import method_decorator
 import json,random,time
 from rest_framework.response import Response
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from django.db.models import Count, Avg, Func
 from django.utils.timezone import localtime
-from django.contrib.auth import get_user_model
 from random import randint, uniform, choice
 import decimal
 from datetime import datetime, timedelta
@@ -138,31 +136,35 @@ class Signup(APIView):
 
         try:
             # Create the user
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create(
+                username=username,
+                email=email,
+                password=password  # Consider hashing the password
+            )
             
             return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': f'Failed to create user: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 # @method_decorator(csrf_exempt, name='dispatch')
 class Login(APIView):
     def post(self, request):
-        print(request)
-        body = json.loads(request.body)
+        body = request.data
         username = body.get('username')
         password = body.get('password')
 
         if not username or not password:
-            return Response({'error': 'Please provide username and password'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'error': 'Please provide username and password'}, status=400)
 
-        user = authenticate(request, username=username, password=password)
+        try:
+            user = User.objects.get(username=username)
+            if user.password == password:  # Ensure to hash passwords in production
+                return JsonResponse({'message': 'Login successful', 'user_id': user.user_id, 'username': user.username}, status=200)
+            else:
+                return JsonResponse({'error': 'Invalid username or password'}, status=401)
 
-        if user is not None:
-            login(request, user)
-            # Return user_id and username on successful login
-            return Response({'message': 'Login successful', 'user_id': user.id, 'username': user.username}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
-
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Invalid username or password'}, status=401)
 # Fare estimation API
 # Uber Pricing
 UBER_PRICING = {
@@ -235,7 +237,7 @@ class EstimateFareView(APIView):
             random.seed(f"{user_id}-{distance_km}-{time_min}-{time.time()}")
             
             # Check if the user exists
-            if not User.objects.filter(id=user_id).exists():
+            if not User.objects.filter(user_id=user_id).exists():
                 return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
             
             # Generate base fare estimates
@@ -318,10 +320,10 @@ class TripData(APIView):
             return Response({'error': 'Please provide all the required data'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user = User.objects.get(id=user_id)  # Fetch the User instance
+            user = User.objects.get(user_id=user_id)  # Fetch the User instance
 
             trip = Trips.objects.create(
-                user_id=user,  # Assign the User instance
+                user_id=user.user_id,  # Assign the User instance
                 pickup_location=pickup_location,
                 destination_location=destination_location,
                 distance_km=distance_km,
@@ -341,8 +343,8 @@ class TripData(APIView):
         user_id = request.query_params.get('user_id')
         if user_id:
             try:
-                user = User.objects.get(id=user_id)
-                trips = Trips.objects.filter(user_id=user)
+                user = User.objects.get(user_id=user_id)
+                trips = Trips.objects.filter(user_id=user_id)
             except User.DoesNotExist:
                 return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         else:

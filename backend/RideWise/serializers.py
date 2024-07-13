@@ -1,6 +1,10 @@
 from rest_framework import serializers
-from .models import Trips, FavoriteRoute, Review, CabService
+from .models import Trips, FavoriteRoute, Review, CabService, User
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 class TripSerializer(serializers.ModelSerializer):
     class Meta:

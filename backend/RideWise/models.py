@@ -10,7 +10,7 @@ class User(models.Model):
         return self.username
 
 class FavoriteRoute(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Updated to refer to User model
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Updated to refer to User model
     pickup_location = models.CharField(max_length=100)
     destination_location = models.CharField(max_length=100)
 

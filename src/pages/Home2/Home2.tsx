@@ -1,6 +1,6 @@
 import Navbar from "../../components/Navbar/Navbar";
 import Location_det from "../../components/Location_det/Location_det";
-import cabimg from "../../assets/cab-compare.jpg";
+
 import "../Home2/Home2.css";
 
 const App = () => {
@@ -13,7 +13,7 @@ const App = () => {
         </div>
       </div>
       <div>
-        <img src={cabimg} alt="" className="cabim" />
+        {/* <img src={cabimg} alt="" className="cabim" /> */}
       </div>
     </>
   );

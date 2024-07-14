@@ -1,9 +1,21 @@
-.cabim{
-    display: flex;
-    position: fixed; 
-    top: 53%; /* Adjust as needed to vertically center */
-    right: 10pc; /* Positions the image to the right edge of the viewport */
-    transform: translateY(-50%); /* Centers vertically based on its own height */
-    z-index: 999; 
-    width: 39pc;
+/* Base styles */
+/* x */
+
+/* Media Queries for responsiveness */
+@media (max-width: 1024px) {
+    .cabim {
+        width: 22em; /* Adjust width for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .cabim {
+        width: 18em; /* Further adjust width for even smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .cabim {
+        width: 14em; /* Adjust width for mobile devices */
+    }
 }

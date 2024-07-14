@@ -1,0 +1,67 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  relationMode    = "prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
+  FavoriteRoutes FavoriteRoute[]
+  Trips          Trips[]
+  Reviews        Review[]
+}
+
+model FavoriteRoute {
+  id                 Int    @id @default(autoincrement())
+  userId             Int
+  pickupLocation     String
+  destinationLocation String
+  user               User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Trips {
+  id                 Int    @id @default(autoincrement())
+  userId             Int
+  pickupLocation     String
+  destinationLocation String
+  distanceKm         Float
+  timeMinutes        Float
+  surgeMultiplier    Float
+  date               DateTime @default(now())
+  serviceName        String
+  vehicleType        String
+  price              Float
+  user               User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Review {
+  id          Int    @id @default(autoincrement())
+  userId      Int
+  serviceName String
+  vehicleType String
+  rating      Float
+  comment     String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model CabService {
+  serviceId   String @id
+  serviceName String @default("Uber")
+  vehicleType String
+  description String
+}

@@ -10,7 +10,7 @@ class User(models.Model):
         return self.username
 
 class FavoriteRoute(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # Updated to refer to User model
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Updated to refer to User model
     pickup_location = models.CharField(max_length=100)
     destination_location = models.CharField(max_length=100)
 
@@ -18,7 +18,7 @@ class FavoriteRoute(models.Model):
         return f"{self.user} - {self.pickup_location} to {self.destination_location}"
 
 class Trips(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # Updated to refer to User model
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Updated to refer to User model
     pickup_location = models.CharField(max_length=100)
     destination_location = models.CharField(max_length=100)
     distance_km = models.DecimalField(max_digits=10, decimal_places=2)
@@ -33,7 +33,7 @@ class Trips(models.Model):
         return f"{self.user.username} - {self.pickup_location} to {self.destination_location}"
 
 class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # Updated to refer to User model
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Updated to refer to User model
     service_name = models.CharField(max_length=100)
     vehicle_type = models.CharField(max_length=100)
     rating = models.FloatField()

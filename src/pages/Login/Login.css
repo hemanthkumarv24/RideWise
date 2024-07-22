@@ -140,3 +140,88 @@ form .register-link{
 .register-link p a:hover {
     text-decoration: underline;
 }
+
+@media (max-width: 768px) {
+    .wrapper {
+    width: 50%; /* Increased width percentage for tablets */
+    padding: 15px;
+    }
+    
+    form h1 {
+      font-size: 1.5rem;
+    }
+  
+    .input-box input {
+      font-size: 14px;
+    }
+  
+    form button {
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .wrapper {
+      width: 90%; /* Increased width percentage for tablets */
+    }
+    .wrapper .form-box.login .input-box input{
+        width: 130%;
+        height: 100%;
+        background: transparent;
+        border: none;
+        outline:none;
+        margin-left: -15%;
+        border:2px solid rgb(176, 134, 100);
+        border-radius:40px;
+        font-size: 16px;
+        color:antiquewhite;
+        padding: 20px 45px 20px 20px;
+    }
+
+    .wrapper .form-box.register .input-box input{
+        width: 115%;
+        height: 100%;
+        background: transparent;
+        border: none;
+        outline:none;
+        margin-left: -15%;
+        border:2px solid rgb(176, 134, 100);
+        border-radius:40px;
+        font-size: 16px;
+        color:antiquewhite;
+        padding: 20px 45px 20px 20px;
+    }
+    .remember-forgot{
+        display: none;
+    }
+    .wrapper .form-box.register form  h1 {
+      font-size: 1.2rem;
+      margin-left: -7%;
+
+    }
+  
+    .input-box input {
+      font-size: 12px;
+    }
+  
+    form button {
+      font-size: 12px;
+    }
+  }
+  /* Hide extra options on small screens */
+@media (max-width: 480px) {
+    .remember-forgot {
+      display: none;
+    }
+    .wrapper .form-box.login .remember-forgot {
+        display: none;
+      }
+    .remember-forgot label input {
+      margin-right: 0; /* Adjust margin if needed */
+    }
+    
+    .form-box.register .remember-forgot {
+      display: none;
+    }
+  }
+  

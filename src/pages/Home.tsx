@@ -2,8 +2,6 @@
 
 import React from 'react';
 import HomeNav from '../components/HomeNav';
-import About from '../components/About';
-
 const Home: React.FC = () => {
   
   return (
@@ -21,7 +19,7 @@ const Home: React.FC = () => {
       
       </div>
     </div>
-    {/* <About/>  */}
+    {/* <About/> */}
     </div>
 
   );

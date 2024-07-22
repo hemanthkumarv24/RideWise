@@ -294,7 +294,7 @@ const ComparePage: React.FC = () => {
 
           <div className="compare-box">
             <h3>Rapido</h3>
-            <img src="https://1000logos.net/wp-content/uploads/2023/09/Rapido-Logo.jpg" alt="Rapido Logo" className="rapido-logo" />
+            <img src="https://1000logos.net/wp-content/uploads/2023/09/Rapido-Logo.jpg" alt="Rapido Logo" className="service-logo" />
             {rapido.map((car, index) => (
               <div
                 key={index}

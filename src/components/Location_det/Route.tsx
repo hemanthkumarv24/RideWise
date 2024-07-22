@@ -133,6 +133,7 @@ const Route: React.FC = () => {
   <div className="info-container">
     {distance !== null && duration !== null && (
       <div className="details-container">
+        
         <p className="distance">Estimated Distance: {(distance / 1000).toFixed(2)} km</p>
         <div className="checkbox-container">
           <input type="checkbox" id="fav-route"  onChange={handleCheckboxChange} />

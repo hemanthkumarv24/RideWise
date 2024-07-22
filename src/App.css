@@ -27,15 +27,14 @@
 }
 
 .navbar-item {
-  margin-left: 20px; /* Adjust margin as needed */
+   /* Adjust margin as needed */
   font-size: larger;
 }
 
 .navbar-link {
   color: white;
   text-decoration: none;
-  padding: 10px 20px; /* Adjust padding as needed */
-  margin-left: 10px; /* Adjust margin as needed */
+ 
 }
 
 .navbar-link:hover {
@@ -51,6 +50,7 @@
   margin-left: auto; /* Push items to the right */
   
 }
+
 
 
 /* src/Home.css */
@@ -98,7 +98,35 @@
   max-width: 900px; /* Optional: control the width for better justification */
 }
 
+@media (max-width: 768px) {
+  .home-content {
+    font-size: 2.2rem; /* Adjust font size for smaller screens */
+    margin-top: -20%; /* Adjust top margin for smaller screens */
+  }
+  .justified-text h3 {
+    font-size: 2rem; /* Adjust font size for smaller screens */
+    max-width: 100%; /* Adjust width for smaller screens */
+  }
+  .justified-text h5 {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+    max-width: 90%; /* Adjust width for smaller screens */
+  }
+}
 
+@media (max-width: 480px) {
+  .home-content {
+    font-size: 1.5rem; /* Adjust font size for extra small screens */
+    margin-top: -15%; /* Adjust top margin for extra small screens */
+  }
+  .justified-text h3 {
+    font-size: 1.2rem; /* Adjust font size for extra small screens */
+    max-width: 100%; /* Adjust width for extra small screens */
+  }
+  .justified-text h5 {
+    font-size: 1rem; /* Adjust font size for extra small screens */
+    max-width: 100%; /* Adjust width for extra small screens */
+  }
+}
 
 /*.button {
   margin-top: 20px; 

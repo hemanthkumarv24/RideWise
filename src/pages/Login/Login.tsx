@@ -11,8 +11,8 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const [loginDisabled, setLoginDisabled] = useState(true);
-  const [registerDisabled, setRegisterDisabled] = useState(true);
+  const [, setLoginDisabled] = useState(true);
+  const [, setRegisterDisabled] = useState(true);
   const navigate = useNavigate();
   const { login } = useAuth();
 

@@ -56,10 +56,10 @@ const Analytics = () => {
           marginTop: "20px",
         }}
       >
-        <Row gutter={16} style={{ width: "80%" }}>
+        <Row gutter={10} style={{ width: "80%" }}>
           {data.total_trips_by_service.map((trip, index) => (
             <Col key={index} xs={24} md={12} lg={8} xl={8}>
-              <Card>
+              <Card style={{marginTop:'10px'}}>
                 <h2>{trip["service_name"]}</h2>
                 <h3>Total Trips: {trip["count"]}</h3>
               </Card>
@@ -72,22 +72,22 @@ const Analytics = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          marginTop: "20px",
+          // marginTop: "20px",
         }}
       >
-        <Row gutter={16} style={{ width: "80%" }}>
+        <Row gutter={10} style={{ width: "80%" }}>
           <Col xs={24} md={8} lg={8} xl={8}>
-            <Card title="Average Distance">
+            <Card title="Average Distance" style={{marginTop:'10px'}}>
               <h2></h2>
               <DonutChart data={distanceData} labels={serviceNames} />
             </Card>
           </Col>
-          <Col xs={24} md={8} lg={8} xl={8}>
-            <Card title="Average Duration">
+          <Col xs={24} md={8} lg={8} xl={8} >
+            <Card title="Average Duration" style={{marginTop:'10px'}}>
               <DonutChart data={durationData} labels={serviceNames} />
             </Card>
           </Col>
-          <Col xs={24} md={8} lg={8} xl={8}>
+          <Col xs={24} md={8} lg={8} xl={8} style={{marginTop:'10px'}}>
             <Card title="Average Price">
               <DonutChart data={priceData} labels={serviceNames} />
             </Card>
@@ -97,22 +97,24 @@ const Analytics = () => {
       <div  style={{
           display: "flex",
           justifyContent: "center",
-          marginTop: "20px",
+          // marginTop: "20px",
         }}>
-          <Row gutter={16} style={{width : "80%"}}>
-            <Col xs={24} md={12} lg={12} xl={12}>
+          <Row gutter={10} style={{width : "80%"}}>
+            <Col xs={24} md={12} lg={12} xl={12} style={{marginTop:'10px'}}>
               <Card style={{
           minHeight:'100%',
-          maxHeight:'100%'
+          maxHeight:'100%',
+          // marginTop:'10px'
         }}>
                 {/* <h2>Ratings</h2> */}
                 <AverageRatings ratings={data.average_ratings} />
               </Card>
             </Col>
-            <Col xs={24} md={12} lg={12} xl={12}>
+            <Col xs={24} md={12} lg={12} xl={12} style={{marginTop:'10px'}}>
               <Card style={{
           minHeight:'100%',
-          maxHeight:'100%'
+          maxHeight:'100%',
+          // marginTop:'10px'
         }}>
                 <LineChart data={data.peak_usage_times_per_service}/>
               </Card>
@@ -122,22 +124,27 @@ const Analytics = () => {
       <div  style={{
           display: "flex",
           justifyContent: "center",
-          marginTop: "20px",
+          // marginTop: "10px",
         }}>
-          <Row gutter={16} style={{width : "80%"}}>
-            <Col xs={24} md={12} lg={12} xl={12}>
+          <Row gutter={10} style={{width : "80%"}}>
+            <Col xs={24} md={12} lg={12} xl={12} style={{marginTop:'10px'}}>
               <Card style={{
           minHeight:'100%',
-          maxHeight:'100%'
+          maxHeight:'100%',
+          // marginTop:'10px',
+          overflow:'scroll'
         }}>
                 <h2>Popular Routes</h2>
                 <PopularRoutesList popular_routes={data.popular_routes}/>
               </Card>
             </Col>
-            <Col xs={24} md={12} lg={12} xl={12}>
+            <Col xs={24} md={12} lg={12} xl={12} style={{marginTop:'10px'}}>
               <Card style={{
           minHeight:'100%',
-          maxHeight:'100%'
+          maxHeight:'100%',
+          // marginTop:'10px',
+          overflow:'scroll'
+
         }}>
           <h2>Frequent Service Usage </h2>
                 <ServiceUsageList service_usage={data.service_usage_by_vehicle} />

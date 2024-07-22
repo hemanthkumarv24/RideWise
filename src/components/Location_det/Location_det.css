@@ -1,177 +1,112 @@
-/* Base styles */
-/* body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #000;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-} */
-
-.box {
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  margin-top: 55px;
-  width: 100%; /* Make it full width */
-  height: auto; /* Adjust height to content */
-  background-color: rgb(0, 0, 0);
-  padding: 20px 50px; /* Add padding */
-  box-sizing: border-box; /* Include padding in width/height */
-  margin-left: 0; /* Center horizontally */
+.box{
+    display: flex;
+    margin-top:100px;
+    /* margin-bottom: 5px; */
+    width: 500px;
+    height: 420px;
+    background-color:rgb(0, 0, 0);
+    border-radius: 40px;
+    padding-left: 78px;
+    margin-left: 50px;
+    border: 1.5px solid white;
 }
 
-.Input {
-  position: absolute;
-  width: 35%;
-  margin-left: 25px;
-  overflow: hidden;
-}
-
-.input-container {
-  position: relative;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.input-container input[type="text"] {
-  width: 100%; /* Use full width of the container */
-  box-sizing: border-box;
-  padding: 12px 3%; /* Add padding inside the input */
-  padding-right: 40px; /* Add space for the icon */
-  border: 2.5px solid rgb(0, 0, 0);
-  font-size: 20px;
-  border-radius: 10px;
-  margin-top: 20px;
-}
-
-.location-icon {
-  position:absolute;
-  right: 10px;
-  top: 60%;
-  transform: translateY(-50%);
-  width: 29px; /* Adjust the size as needed */
-  height: 27px; /* Adjust the size as needed */
-  cursor: pointer;
-}
-
-.Search,.FavRoutes {
-  position: relative;;
-  margin-left: 7pc;
-  width: 50%; /* Adjust width to accommodate padding */
-  margin-top: 20px;
-  padding: 10px 3%;
-  border: 1px solid rgb(0, 0, 0);
-  color: rgb(0, 0, 0);
-  font-size: 20px;
-  /* font-family: 'Playwrite NG Modern', cursive; */
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.cab-img {
-  position: relative;
-  width: 38%; /* Adjust width as needed */
-  height: auto;
-  margin-top: -26px;
-  margin-left: 40pc; /* Push the image to the right */
-  align-self: center; /* Align image vertically with input boxes */
-  /* z-index: 9999; */
-}
-.fav-dropdown {
-  position: absolute;
-  background-color: #ffffff;
-  color: #000000;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-  top: 32pc; /* Adjust positioning as needed */
-  left: 1pc; /* Adjust positioning as needed */
-  width: 60%; /* Adjust width as needed */
-  border-radius: 4px;
-  overflow-y: auto;
-
-}
-
-.fav-dropdown ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-
-
-}
-
-.fav-dropdown ul li {
-  padding: 9px; /* Adjust padding as needed */
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-  font-size: 12px; /* Adjust font size as needed */
- 
-  
+ .Input input[type="text"]{
+        margin-left: -40px;
+        margin-top: 50px;
+        width: 100%;
+        box-sizing: border-box;
+       padding: 16px 3%;
+        border: 2.5px solid black;
+        font-family: 'Playwrite NG Modern', cursive;
+        font-size: 20px;
+        border-radius: 10px;
   
 }
 
-.fav-dropdown ul li:hover {
-  background-color: #000000;
-  color: #ffffff;
+.Search{
+    margin-left: -0px;
+    width:80%;
+    margin-top: 50px;
+    padding: 10px 3%;
+    border: 2.5px solid rgb(0, 0, 0);
+    color: rgb(8, 8, 8);
+    font-size: 20px;
+    font-family: 'Playwrite NG Modern', cursive;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
 }
-/* Media Queries for responsiveness */
-@media (max-width: 768px) {
-  .box {
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
-  }
-
-  .Input {
-    width: 100%; /* Ensure full width on smaller screens */
-    margin-left: 0;
-  }
-
-  .input-container {
-    width: 100%;
-  }
-
-  .input-container input[type="text"] {
-    width: calc(100% - 40px); /* Adjust width to accommodate icon */
-    margin-top: 20px;
-  }
-
-  .Search {
-    margin-left: 0;
-    width: 100%; /* Full width for search button */
-    margin-top: 20px;
-  }
+.search-icon{
+    position:absolute;
+    width:45px;
+    cursor: pointer;
+    padding: 2px;
+    margin-top:-1%;
+    left:399px;
+    
+   
 }
 
-@media (max-width: 480px) {
-  .box {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 10px;
-  }
+.location-icon{
+  position: absolute;
+       margin-left:-60px;
+        margin-top: 71px;
+        width: 4pc;
+        height: 2pc;
+        cursor: pointer;
+        display: inline-block;
 
-  .Input {
-    width: 100%; /* Ensure full width on smaller screens */
-    margin-left: 0;
-  }
-
-  .input-container {
-    width: 100%;
-  }
-
-  .input-container input[type="text"] {
-    width: calc(100% - 40px); /* Adjust width to accommodate icon */
-    margin-top: 20px;
-  }
-
-  .Search {
-    width: 100%; /* Full width for search button */
-    margin-top: 20px;
-  }
 }
 
+.fav{
+    color: white;
+    margin-top: 20px;
+    margin-left: 40px;
+    align-items: Left;
+    max-width: 100%;
+}
+
+  /* Location_det.css */
+
+.fav ul {
+    list-style-type: none;
+    align-items: Left;
+
+    padding: 0;
+    margin: 0; /* Remove default margin */
+  }
+  
+  .fav ul li {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    align-items: Right;
+
+  }
+  
+  .fav ul li:hover {
+    background-color: #f0f0f0;
+    color: black;
+  }
+  
+
+  @media (max-width: 480px) {
+    .box{
+      /* margin-left: 10%; */
+      width: 90%;
+      max-width: 90%;
+      margin-left: 5%;
+      margin-top: 5%;
+    } 
+
+    .fav{
+      color: white;
+      margin-top: 20px;
+      margin-left: 10%;
+      max-width: 90%;
+      min-width: 90%;
+  }
+  
+  }

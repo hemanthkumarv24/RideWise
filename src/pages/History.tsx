@@ -92,7 +92,7 @@ const History = () => {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "20px", color: 'white' }}>
                 <h1>Welcome, <span style={{ color: 'yellow' }}>{user?.username}</span>!</h1>
                 <h3 style={{ marginTop: '10px', marginBottom: '10px' }}>Here is your Recent Trip data</h3>
-                <Card style={{ width: "80%" }}>
+                <Card style={{ width: "80%",overflow:'scroll' }}>
                     <Table
                         columns={columns}
                         dataSource={data}

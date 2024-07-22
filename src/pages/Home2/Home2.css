@@ -1,21 +1,17 @@
-/* Base styles */
-/* x */
-
-/* Media Queries for responsiveness */
-@media (max-width: 1024px) {
-    .cabim {
-        width: 22em; /* Adjust width for smaller screens */
-    }
+.cabim {
+    display: block; /* Ensure the image is displayed */
+    position: fixed; 
+    margin-top: 20%;
+    height: 100%;
+    transform: translateY(-50%); /* Center vertically based on its own height */
+    z-index: 999; 
+    width: 50%; /* Adjust the width to a percentage for responsiveness */
+    max-width: 50%; /* Optional: set a maximum width to prevent excessive size on larger screens */
 }
 
-@media (max-width: 768px) {
-    .cabim {
-        width: 18em; /* Further adjust width for even smaller screens */
-    }
-}
-
+/* Hide the image on very small screens */
 @media (max-width: 480px) {
     .cabim {
-        width: 14em; /* Adjust width for mobile devices */
+        display: none;
     }
 }

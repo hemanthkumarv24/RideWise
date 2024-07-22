@@ -4,14 +4,13 @@
     align-items: center;
     justify-content: space-between;
     background-color: rgb(0, 0, 0);
-    padding:50px ;
-    padding: auto;
+    padding:25px 5%;
     color: white;
     max-height: 80px;
 
 }
 h1{
-     /* font-family: 'Playwrite NG Modern', cursive; */
+     font-family: 'Playwrite NG Modern', cursive;
      letter-spacing: 10px;
     font-size: xx-large;
     font-weight: 10px;
@@ -43,7 +42,7 @@ ul li{
 .profile-icon{
     position: absolute;
     display:flex;
-    width:49px;
+    width:55px;
     cursor: pointer;
     padding-bottom:7px;
     margin-top: -1.8pc;
@@ -55,14 +54,14 @@ ul li{
   .dropdown {
     position: absolute;
      /* Adjust as necessary */
-     top: 4.7pc;
-   right: 5.5px;
+     top: 6pc;
+   right: 0;
     min-width: 150px;
-    width: 150px;
+    width: 200px;
     /* Adjust the width as necessary */
     background-color: #fffefe;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    border-radius: 20px;
     z-index: 10;
     color: rgb(6, 5, 5);
     padding: px ;
@@ -131,4 +130,11 @@ ul li{
   .Analytics:hover::after {
     background-color: white; /* Change underline color on hover */
     
+  }
+
+  @media (max-width: 565px) {
+    
+    .relative{
+      margin-right: 13%;
+    }
   }

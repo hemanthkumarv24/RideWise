@@ -66,3 +66,15 @@
     background-color: #e0ca3b;
   }
   
+  @media (max-width: 480px) {
+    .details-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .distance, 
+    .checkbox-container, 
+    .duration {
+      text-align: center;
+    }
+  }

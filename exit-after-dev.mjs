@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+import { exec } from 'child_process';
 
 exec('yarn dev', (err, stdout, stderr) => {
   if (err) {

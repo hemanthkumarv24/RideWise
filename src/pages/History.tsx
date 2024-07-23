@@ -37,7 +37,7 @@ const History = () => {
             key: 'date',
             render: (date: string | number | Date) => new Date(date).toLocaleString(),
             sorter: (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-            defaultSortOrder: 'descend', // Sort descending by default
+            defaultSortOrder: 'descend' as const, // Sort descending by default
           },
         {
             title: 'Pickup Location',

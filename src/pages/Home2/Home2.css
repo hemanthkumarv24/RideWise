@@ -1,7 +1,7 @@
 .cabim {
     display: block; /* Ensure the image is displayed */
     position: fixed; 
-    margin-top: 20%;
+    margin-top: 21.5%;
     height: 100%;
     transform: translateY(-50%); /* Center vertically based on its own height */
     z-index: 999; 

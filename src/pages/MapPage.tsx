@@ -124,6 +124,7 @@ const MapPage: React.FC = () => {
     height: '50px',
     marginLeft: '10px',
     marginRight: '10px',
+    marginTop: '12px',
     fontSize: '20px',
   };
 

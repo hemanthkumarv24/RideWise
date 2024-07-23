@@ -5,18 +5,20 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Button, Input } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LocationContext } from '../components/Location_det/LocationContext';
-// mapboxgl.accessToken = `${import.meta.env.mapboxgl}`; 
-mapboxgl.accessToken = 'pk.eyJ1IjoiaGFtemF6YWlkaSIsImEiOiJja3ZtY3RodzgwNGdlMzBwaWdjNWx5cTQ3In0.2s32bZnlSY-Qg5PFmoLrJw'; // Replace with your Mapbox access token
+
+// Set your Mapbox access token here
+mapboxgl.accessToken = 'pk.eyJ1IjoiaGFtemF6YWlkaSIsImEiOiJja3ZtY3RodzgwNGdlMzBwaWdjNWx5cTQ3In0.2s32bZnlSY-Qg5PFmoLrJw'; 
 
 const MapPage: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markerRef = useRef<mapboxgl.Marker | null>(null);
-  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
+  const [, setCurrentLocation] = useState<string | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const navigate = useNavigate();
-  const { state } = useLocation<{ from: 'pickup' | 'destination' }>();
+  const location = useLocation();
+  const state = location.state as { from: 'pickup' | 'destination' } | undefined;
   const { setPickupLocation, setDestinationLocation } = useContext(LocationContext);
 
   useEffect(() => {
@@ -166,7 +168,7 @@ const MapPage: React.FC = () => {
         </Button>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px',marginLeft: '10px', color: 'white' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px', marginLeft: '10px', color: 'white' }}>
         <p>{selectedAddress ? `Selected address: ${selectedAddress}` : 'Drag the marker or search to select an address'}</p>
       </div>
     </div>

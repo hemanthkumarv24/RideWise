@@ -1,5 +1,4 @@
-// AuthContext.tsx
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface AuthContextType {
   user: User | null;
@@ -20,9 +19,14 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
 });
 
+// Define the props type for the AuthProvider component
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider: React.FC = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
     const storedUser = localStorage.getItem('user');
     return storedUser ? JSON.parse(storedUser) : initialUser;

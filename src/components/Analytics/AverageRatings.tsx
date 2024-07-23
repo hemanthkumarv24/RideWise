@@ -1,9 +1,19 @@
+import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const AverageRatings = ({ ratings }) => {
+interface Rating {
+    service_name: string;
+    avg_rating: number;
+}
+
+interface AverageRatingsProps {
+    ratings: Rating[];
+}
+
+const AverageRatings: React.FC<AverageRatingsProps> = ({ ratings }) => {
     if (!ratings || ratings.length === 0) {
         return <div>No data available</div>; // Handle case where data is empty or undefined
     }
@@ -30,7 +40,6 @@ const AverageRatings = ({ ratings }) => {
             legend: {
                 display: false, // Hide the legend (color indicator)
             },
-            
         },
         scales: {
             y: {
@@ -42,11 +51,11 @@ const AverageRatings = ({ ratings }) => {
                     display: false, // Hide y-axis grid lines
                 },
             },
-            x:{
+            x: {
                 grid: {
-                    display: false, // Hide y-axis grid lines
+                    display: false, // Hide x-axis grid lines
                 },
-            }
+            },
         },
     };
 

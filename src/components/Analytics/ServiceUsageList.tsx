@@ -4,6 +4,7 @@ import Highlighter from 'react-highlight-words';
 import { Button, Input, Space, Table } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
+import type { InputRef } from 'antd/es/input'; // Import InputRef for the ref type
 
 interface ServiceUsageData {
   service_name: string;
@@ -14,9 +15,9 @@ interface ServiceUsageData {
 type DataIndex = keyof ServiceUsageData;
 
 const ServiceUsageList: React.FC<{ service_usage: ServiceUsageData[] }> = ({ service_usage }) => {
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState<DataIndex>('');
-  const searchInput = useRef<Input>(null);
+  const [searchText, setSearchText] = useState<string>('');
+  const [searchedColumn, setSearchedColumn] = useState<DataIndex | undefined>(undefined); // Use DataIndex | undefined
+  const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
     selectedKeys: string[],
@@ -31,6 +32,7 @@ const ServiceUsageList: React.FC<{ service_usage: ServiceUsageData[] }> = ({ ser
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText('');
+    setSearchedColumn(undefined); // Reset searchedColumn
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<ServiceUsageData> => ({
@@ -45,7 +47,7 @@ const ServiceUsageList: React.FC<{ service_usage: ServiceUsageData[] }> = ({ ser
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
+          value={selectedKeys[0] as string}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
           style={{ marginBottom: 8, display: 'block' }}

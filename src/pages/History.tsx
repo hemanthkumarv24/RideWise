@@ -1,8 +1,9 @@
 import axios from "axios";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from '../context/AuthContext';
 import Navbar from "../components/Navbar/Navbar";
-import { Table,Card } from 'antd';
+import { Table, Card } from 'antd';
+import type { TablePaginationConfig } from 'antd/es/table';
 
 const History = () => {
     const { user } = useAuth();
@@ -38,7 +39,7 @@ const History = () => {
             render: (date: string | number | Date) => new Date(date).toLocaleString(),
             sorter: (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime(),
             defaultSortOrder: 'descend' as const, // Sort descending by default
-          },
+        },
         {
             title: 'Pickup Location',
             dataIndex: 'pickup_location',
@@ -74,16 +75,17 @@ const History = () => {
             dataIndex: 'time_minutes',
             key: 'time_minutes',
         },
-        // {
-        //     title: 'Surge Multiplier',
-        //     dataIndex: 'surge_multiplier',
-        //     key: 'surge_multiplier',
-        // },
     ];
 
     // Handle pagination change
-    const handleTableChange = (pagination: SetStateAction<{ current: number; pageSize: number; }>) => {
-        setPagination(pagination);
+    const handleTableChange = (
+        pagination: TablePaginationConfig,
+        
+    ) => {
+        setPagination({
+            current: pagination.current!,
+            pageSize: pagination.pageSize!,
+        });
     };
 
     return (
@@ -92,7 +94,7 @@ const History = () => {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "20px", color: 'white' }}>
                 <h1>Welcome, <span style={{ color: 'yellow' }}>{user?.username}</span>!</h1>
                 <h3 style={{ marginTop: '10px', marginBottom: '10px' }}>Here is your Recent Trip data</h3>
-                <Card style={{ width: "80%",overflow:'scroll' }}>
+                <Card style={{ width: "80%", overflow: 'scroll' }}>
                     <Table
                         columns={columns}
                         dataSource={data}

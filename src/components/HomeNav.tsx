@@ -22,9 +22,8 @@ const HomeNav: React.FC = () => {
           <li key={index} className="navbar-item">
             <NavLink
               to={item.path}
-              className="navbar-link"
-              activeClassName="active"
-              exact // Add exact for home page
+              className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'}
+              end // Add end for home page
             >
               {item.name}
             </NavLink>

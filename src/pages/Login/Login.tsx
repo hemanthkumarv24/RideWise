@@ -203,7 +203,7 @@ const Login: React.FC = () => {
                 I agree to the terms & conditions
               </label>
             </div>
-            <button type="submit" onClick={handleSignup}>
+            <button type="submit">
               Register
             </button>
             <div className="register-link">

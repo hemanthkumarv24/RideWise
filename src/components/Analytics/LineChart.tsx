@@ -3,7 +3,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const LineChart = ({ data }) => {
+const LineChart = ({ data }: { data: any }) => {
     const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
 
     const serviceNames = ['Ola', 'Uber', 'Rapido'];

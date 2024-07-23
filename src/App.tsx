@@ -35,7 +35,7 @@ function App() {
   ]);
 
   return (
-    <AuthProvider>
+      <AuthProvider>
       <LocationProvider>
         <RouterProvider router={router} />
       </LocationProvider>

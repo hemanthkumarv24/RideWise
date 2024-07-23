@@ -837,6 +837,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-highlight-words@^0.20.0":
+  version "0.20.0"
+  resolved "https://registry.npmjs.org/@types/react-highlight-words/-/react-highlight-words-0.20.0.tgz"
+  integrity sha512-Qm512TiOakvtNzHJ2+TNVHnLn5cJ2wLQV0+LrhuispVth6dRf5b8ydjq3Kc0thpZ7bz4s6RnG6meboAXHWRK+Q==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^18.2.66":
   version "18.3.2"
   resolved "https://registry.npmjs.org/@types/react/-/react-18.3.2.tgz"

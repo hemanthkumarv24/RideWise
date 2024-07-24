@@ -76,6 +76,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+CORS_ALLOWED_ORIGINS = [
+    "https://ride-wise-frontend.vercel.app"
+]
+
 import os
 
 # Initialise environment variables

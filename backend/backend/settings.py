@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-de=mq!=k9@=%ic4jwhhewbty)8q88n0^@+@)mpu11nh3u+n!k(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','.vercel.app']
+ALLOWED_HOSTS = ['*', '.vercel.app']
 
 
 # Application definition
@@ -45,11 +45,11 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Add CorsMiddleware to the top
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Ensure this line is present
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -74,11 +74,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for testing
 
-CORS_ALLOWED_ORIGINS = [
-    "https://ride-wise-frontend.vercel.app"
-]
+# If you want to specify allowed origins, uncomment the following and comment out CORS_ALLOW_ALL_ORIGINS
+# CORS_ALLOWED_ORIGINS = [
+#     "https://ride-wise-frontend.vercel.app",
+# ]
 
 import os
 

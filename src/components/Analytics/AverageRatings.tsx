@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
@@ -40,6 +39,7 @@ const AverageRatings: React.FC<AverageRatingsProps> = ({ ratings }) => {
             legend: {
                 display: false, // Hide the legend (color indicator)
             },
+            
         },
         scales: {
             y: {
@@ -51,11 +51,11 @@ const AverageRatings: React.FC<AverageRatingsProps> = ({ ratings }) => {
                     display: false, // Hide y-axis grid lines
                 },
             },
-            x: {
+            x:{
                 grid: {
-                    display: false, // Hide x-axis grid lines
+                    display: false, // Hide y-axis grid lines
                 },
-            },
+            }
         },
     };
 

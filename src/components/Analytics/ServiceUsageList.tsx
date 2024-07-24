@@ -32,7 +32,6 @@ const ServiceUsageList: React.FC<{ service_usage: ServiceUsageData[] }> = ({ ser
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText('');
-    setSearchedColumn(undefined); // Reset searchedColumn
   };
 
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<ServiceUsageData> => ({
@@ -47,7 +46,7 @@ const ServiceUsageList: React.FC<{ service_usage: ServiceUsageData[] }> = ({ ser
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0] as string}
+          value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
           style={{ marginBottom: 8, display: 'block' }}

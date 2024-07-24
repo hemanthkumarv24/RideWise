@@ -6,14 +6,12 @@ import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import type { InputRef } from 'antd/es/input';
 
-// Define the type for your data
 interface PopularRoutesData {
   pickup_location: string;
   destination_location: string;
   count: number;
 }
 
-// Define the type for the data index
 type DataIndex = keyof PopularRoutesData;
 
 const PopularRoutesList: React.FC<{ popular_routes: PopularRoutesData[] }> = ({ popular_routes }) => {
@@ -21,7 +19,6 @@ const PopularRoutesList: React.FC<{ popular_routes: PopularRoutesData[] }> = ({ 
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null); // Use InputRef for the ref type
 
-  // Function to handle search
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
@@ -32,13 +29,11 @@ const PopularRoutesList: React.FC<{ popular_routes: PopularRoutesData[] }> = ({ 
     setSearchedColumn(dataIndex);
   };
 
-  // Function to handle reset
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText('');
   };
 
-  // Function to get column search props
   const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<PopularRoutesData> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -120,7 +115,6 @@ const PopularRoutesList: React.FC<{ popular_routes: PopularRoutesData[] }> = ({ 
       ),
   });
 
-  // Define the columns for the table
   const columns: ColumnsType<PopularRoutesData> = [
     {
       title: 'Pickup Location',
@@ -143,7 +137,6 @@ const PopularRoutesList: React.FC<{ popular_routes: PopularRoutesData[] }> = ({ 
     },
   ];
 
-  // Define pagination configuration
   const paginationConfig = {
     defaultPageSize: 5, // Number of items per page
     pageSizeOptions: ['5', '10', '15', '20'], // Options for changing the number of items per page

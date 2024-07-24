@@ -41,7 +41,7 @@
   text-decoration: underline;
 }
 
-.active {
+.navbar-link .active {
   font-weight: bold;
   color: rgb(248, 255, 35);
 }
@@ -55,7 +55,7 @@
 
 /* src/Home.css */
 .home-container {
-  background-image: url('assets/cab.jpg'); /* Update with your image path */
+  background-image: url('src/assets/cab1 (2).jpg'); /* Update with your image path */
   background-size:cover; /* Cover the entire container */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Don't repeat the image */

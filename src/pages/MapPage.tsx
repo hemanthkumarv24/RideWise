@@ -5,9 +5,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Button, Input } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LocationContext } from '../components/Location_det/LocationContext';
-
-// Set your Mapbox access token here
-mapboxgl.accessToken = 'pk.eyJ1IjoiaGFtemF6YWlkaSIsImEiOiJja3ZtY3RodzgwNGdlMzBwaWdjNWx5cTQ3In0.2s32bZnlSY-Qg5PFmoLrJw'; 
+// mapboxgl.accessToken = `${import.meta.env.mapboxgl}`; 
+mapboxgl.accessToken = 'pk.eyJ1IjoiaGFtemF6YWlkaSIsImEiOiJja3ZtY3RodzgwNGdlMzBwaWdjNWx5cTQ3In0.2s32bZnlSY-Qg5PFmoLrJw'; // Replace with your Mapbox access token
 
 const MapPage: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -168,7 +167,7 @@ const MapPage: React.FC = () => {
         </Button>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px', marginLeft: '10px', color: 'white' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px',marginLeft: '10px', color: 'white' }}>
         <p>{selectedAddress ? `Selected address: ${selectedAddress}` : 'Drag the marker or search to select an address'}</p>
       </div>
     </div>

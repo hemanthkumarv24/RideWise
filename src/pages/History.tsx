@@ -39,7 +39,7 @@ const History = () => {
             render: (date: string | number | Date) => new Date(date).toLocaleString(),
             sorter: (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime(),
             defaultSortOrder: 'descend' as const, // Sort descending by default
-        },
+          },
         {
             title: 'Pickup Location',
             dataIndex: 'pickup_location',
@@ -75,6 +75,11 @@ const History = () => {
             dataIndex: 'time_minutes',
             key: 'time_minutes',
         },
+        // {
+        //     title: 'Surge Multiplier',
+        //     dataIndex: 'surge_multiplier',
+        //     key: 'surge_multiplier',
+        // },
     ];
 
     // Handle pagination change
@@ -94,7 +99,7 @@ const History = () => {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "20px", color: 'white' }}>
                 <h1>Welcome, <span style={{ color: 'yellow' }}>{user?.username}</span>!</h1>
                 <h3 style={{ marginTop: '10px', marginBottom: '10px' }}>Here is your Recent Trip data</h3>
-                <Card style={{ width: "80%", overflow: 'scroll' }}>
+                <Card style={{ width: "80%",overflow:'scroll' }}>
                     <Table
                         columns={columns}
                         dataSource={data}

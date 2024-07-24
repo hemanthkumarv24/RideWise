@@ -1,4 +1,3 @@
-// src/components/Location_det/Route.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import {  useNavigate } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
@@ -6,6 +5,7 @@ import './Location.css';
 import { Button } from 'antd';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
+// import Navbar from '../Navbar/Navbar';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiaGFtemF6YWlkaSIsImEiOiJja3ZtY3RodzgwNGdlMzBwaWdjNWx5cTQ3In0.2s32bZnlSY-Qg5PFmoLrJw';
 
@@ -25,6 +25,7 @@ const Route: React.FC<RouteProps> = ({ pickup, destination }) => {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddToFav(e.target.checked);
   };
+
 
   const getCoordinates = async (location: string) => {
     const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxgl.accessToken}`);
@@ -121,22 +122,22 @@ const Route: React.FC<RouteProps> = ({ pickup, destination }) => {
   };
 
   return (
-    <div className="route-container">
-      <div ref={mapContainer} className="map-container" />
-      <div className="info-container">
-        {distance !== null && duration !== null && (
-          <div className="details-container">
-            <p className="distance">Estimated Distance: {(distance / 1000).toFixed(2)} km</p>
-            <div className="checkbox-container">
+      <div className="route-container">
+  <div ref={mapContainer} className="map-container" />
+  <div className="info-container">
+    {distance !== null && duration !== null && (
+      <div className="details-container">
+        <p className="distance">Estimated Distance: {(distance / 1000).toFixed(2)} km</p>
+        <div className="checkbox-container">
               <input type="checkbox" id="fav-route" onChange={handleCheckboxChange} />
               <label htmlFor="fav-route">Add this Route as your Favorite route</label>
-            </div>
-            <p className="duration">Estimated Duration: {(duration / 60).toFixed(2)} minutes</p>
-          </div>
-        )}
-        <Button className="compare-button" onClick={handleClick}>Click to See Prices</Button>
+        </div>
+        <p className="duration">Estimated Duration: {(duration / 60).toFixed(2)} minutes</p>
       </div>
-    </div>
+    )}
+    <Button className="compare-button" onClick={handleClick}>Click to See Prices</Button>
+  </div>
+</div>
   );
 };
 

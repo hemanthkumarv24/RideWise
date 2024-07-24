@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -27,7 +27,6 @@ SECRET_KEY = 'django-insecure-de=mq!=k9@=%ic4jwhhewbty)8q88n0^@+@)mpu11nh3u+n!k(
 DEBUG = True
 
 ALLOWED_HOSTS = ['*', '.vercel.app']
-
 
 # Application definition
 
@@ -81,8 +80,6 @@ CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for testing
 #     "https://ride-wise-frontend.vercel.app",
 # ]
 
-import os
-
 # Initialise environment variables
 env = environ.Env(
     # Set default values and casting
@@ -122,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -133,7 +129,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

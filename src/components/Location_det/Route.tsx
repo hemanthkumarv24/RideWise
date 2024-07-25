@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import './Location.css';
 import { Button } from 'antd';
@@ -14,18 +14,20 @@ interface RouteProps {
   destination: string;
 }
 
-const Route: React.FC<RouteProps> = ({ pickup, destination }) => {
+const Route: React.FC<RouteProps> = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [distance, setDistance] = useState<number | null>(null);
   const [duration, setDuration] = useState<number | null>(null);
   const [addToFav, setAddToFav] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { pickupLocation, destinationLocation } = location.state;
+
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddToFav(e.target.checked);
   };
-
 
   const getCoordinates = async (location: string) => {
     const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxgl.accessToken}`);
@@ -47,8 +49,8 @@ const Route: React.FC<RouteProps> = ({ pickup, destination }) => {
 
       const fetchRoute = async () => {
         try {
-          const start = await getCoordinates(pickup);
-          const end = await getCoordinates(destination);
+          const start = await getCoordinates(pickupLocation);
+          const end = await getCoordinates(destinationLocation);
 
           const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
@@ -96,15 +98,15 @@ const Route: React.FC<RouteProps> = ({ pickup, destination }) => {
 
       fetchRoute();
     }
-  }, [pickup, destination]);
+  }, [pickupLocation, destinationLocation]);
 
   const handleClick = async () => {
     if (addToFav && user) {
       try {
         await axios.post(`${import.meta.env.VITE_API_BASE_URL}/favorite_routes/`, {
           user_id: user.user_id,
-          pickup_location: pickup,
-          destination_location: destination,
+          pickup_location: pickupLocation,
+          destination_location: destinationLocation,
         });
       } catch (error) {
         console.error('Error adding favorite route:', error);
@@ -115,8 +117,8 @@ const Route: React.FC<RouteProps> = ({ pickup, destination }) => {
       state: {
         distance: distance !== null ? (distance / 1000).toFixed(2) : null,
         duration: duration !== null ? (duration / 60).toFixed(2) : null,
-        pickupLocation: pickup,
-        destinationLocation: destination,
+        pickupLocation: pickupLocation,
+        destinationLocation: destinationLocation,
       },
     });
   };

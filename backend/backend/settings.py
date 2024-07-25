@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import environ
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -26,8 +26,13 @@ SECRET_KEY = 'django-insecure-de=mq!=k9@=%ic4jwhhewbty)8q88n0^@+@)mpu11nh3u+n!k(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', '.vercel.app']
+ALLOWED_HOSTS = ['*','.vercel.app']
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'https://ride-wise.vercel.app',
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,7 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Add CorsMiddleware to the top
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -73,12 +78,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for testing
+CORS_ALLOW_ALL_ORIGINS = True
 
-# If you want to specify allowed origins, uncomment the following and comment out CORS_ALLOW_ALL_ORIGINS
-# CORS_ALLOWED_ORIGINS = [
-#     "https://ride-wise-frontend.vercel.app",
-# ]
+import os
 
 # Initialise environment variables
 env = environ.Env(
@@ -119,6 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -129,6 +132,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

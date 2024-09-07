@@ -139,9 +139,9 @@ class Signup(APIView):
             user = User.objects.create(
                 username=username,
                 email=email,
-                password=password  # Consider hashing the password
             )
-            
+            user.set_password(password)
+            user.save()
             return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': f'Failed to create user: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -158,7 +158,7 @@ class Login(APIView):
 
         try:
             user = User.objects.get(username=username)
-            if user.password == password:  # Ensure to hash passwords in production
+            if user.verify_password(password):  # Ensure to hash passwords in production
                 return JsonResponse({'message': 'Login successful', 'user_id': user.user_id, 'username': user.username}, status=200)
             else:
                 return JsonResponse({'error': 'Invalid username or password'}, status=401)

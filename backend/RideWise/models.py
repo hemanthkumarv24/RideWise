@@ -1,14 +1,24 @@
 from django.db import models
 
+from django.contrib.auth.hashers import make_password, check_password
+
 class User(models.Model):
     user_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
+    email = models.EmailField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
 
     def __str__(self):
         return self.username
 
+    # Use set_password to hash passwords before saving
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+    
+    # Use check_password to verify if the provided password is correct
+    def verify_password(self, raw_password):
+        return check_password(raw_password, self.password)
+    
 class FavoriteRoute(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Updated to refer to User model
     pickup_location = models.CharField(max_length=100)

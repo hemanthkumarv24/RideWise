@@ -13,7 +13,7 @@ const HomeNav: React.FC = () => {
 
   return (
     <nav className="navbar">
-      <h2 className="navbar-logo">RideWise</h2>
+      <h2 className="navbar-logo">Cab Compare</h2>
       <ul className="navbar-list">
         {/* Render other navbar items here if needed */}
       </ul>

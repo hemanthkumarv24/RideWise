@@ -103,6 +103,18 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',   # Limits per user
+        'rest_framework.throttling.AnonRateThrottle'    # Limits for non-logged in users (if needed)
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '10000/hour',  # 100 requests per user per hour
+        'anon': '200/hour'    # 20 requests per hour for anonymous users
+    }
+}
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

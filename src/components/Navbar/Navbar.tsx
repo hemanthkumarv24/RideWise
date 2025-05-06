@@ -50,7 +50,7 @@ const Navbar = () => {
 
   return (
     <div className="Navbar">
-      <h1 className="logo">RIDEWISE</h1>
+      <h1 className="logo">CABCOMPARE</h1>
       {!isMobile && (
         <ul className="navitem">
           <Link to="/dashboard" className="Home">

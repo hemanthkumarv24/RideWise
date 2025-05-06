@@ -20,6 +20,35 @@ import decimal
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import ExtractHour
+import hmac
+import hashlib
+
+# Define your secret key
+SECRET_KEY = b'abhkkish@2025'  # (Must be kept secret!)
+
+def verify_hmac_signature(message, client_signature):
+    server_signature = hmac.new(
+        key=SECRET_KEY,
+        msg=message.encode('utf-8'),
+        digestmod=hashlib.sha256
+    ).hexdigest()
+    return hmac.compare_digest(server_signature, client_signature)
+
+
+def get_time_based_surge():
+    now = datetime.now()
+    hour = now.hour
+
+    # Example time slots (you can adjust these)
+    if 7 <= hour <= 10:  # Morning Office Rush
+        return 1.5
+    elif 17 <= hour <= 20:  # Evening Office Rush
+        return 1.4
+    elif 22 <= hour <= 23:  # Late night
+        return 1.2
+    else:
+        return 1.0  # Normal times
+
 
 
 class FavoriteRouteViewSet(APIView):
@@ -183,7 +212,7 @@ UBER_PRICING = {
 OLA_PRICING = {
     'prime_sedan': {'base_rate': 50, 'base_distance': 1.9, 'per_km_rate': 14, 'per_min_rate': 2, 'operating_fee': 18},
     'mini': {'base_rate': 30, 'base_distance': 1.9, 'per_km_rate': 10, 'per_min_rate': 1.2, 'operating_fee': 12},
-    'auto': {'base_rate': 25, 'base_distance': 2, 'per_km_rate': 8, 'per_min_rate': 1, 'operating_fee': 10},
+    'auto': {'base_rate': 25, 'base_distance': 2, 'per_km_rate': 9, 'per_min_rate': 1, 'operating_fee': 10},
     'share': {'base_rate': 20, 'base_distance': 1.9, 'per_km_rate': 7, 'per_min_rate': 1, 'operating_fee': 8},
     'rentals': {'base_rate': 300, 'base_distance': 10, 'per_km_rate': 15, 'per_min_rate': 2.5, 'operating_fee': 50},
     'outstation': {'base_rate': 1000, 'base_distance': 50, 'per_km_rate': 18, 'per_min_rate': 3, 'operating_fee': 100},
@@ -195,9 +224,16 @@ OLA_PRICING = {
 
 # Rapido Pricing
 RAPIDO_PRICING = {
-    'auto': {'base_rate': 20, 'per_km_rate': 6, 'per_min_rate': 0.8, 'operating_fee': 8},
+    'auto': {'base_rate': 24, 'per_km_rate': 8, 'per_min_rate': 0.9, 'operating_fee': 10},
     'bike': {'base_rate': 15, 'per_km_rate': 5, 'per_min_rate': 0.5, 'operating_fee': 5},
+    'parcel': {'base_rate': 30, 'per_km_rate': 8, 'per_min_rate': 1.5, 'operating_fee': 12},  # Parcel service at a lower base rate but higher per km rate
+    'cab_non_ac': {'base_rate': 40, 'per_km_rate': 12, 'per_min_rate': 1, 'operating_fee': 10},  # Reasonable base rate for non-AC cabs
+    'auto_share': {'base_rate': 10, 'per_km_rate': 4, 'per_min_rate': 0.6, 'operating_fee': 5},  # Shared auto service with a low base rate
+    'cab_premium': {'base_rate': 80, 'per_km_rate': 20, 'per_min_rate': 2.5, 'operating_fee': 25},  # Premium service with higher base rate and per km rate
+    'cab_ac': {'base_rate': 60, 'per_km_rate': 16, 'per_min_rate': 2, 'operating_fee': 18},  # Air-conditioned cab service priced higher than non-AC
+    'auto_pet': {'base_rate': 30, 'per_km_rate': 8, 'per_min_rate': 1.2, 'operating_fee': 10},  # Pet-friendly auto service with higher base rate
 }
+
 
 NAMMA_YATRI_PRICING = {
     'non_ac_mini': {'base_rate': 35, 'per_km_rate': 12, 'per_min_rate': 1.2, 'operating_fee': 15},
@@ -205,7 +241,9 @@ NAMMA_YATRI_PRICING = {
     'sedan': {'base_rate': 55, 'per_km_rate': 18, 'per_min_rate': 2, 'operating_fee': 25},
     'xl_cab': {'base_rate': 75, 'per_km_rate': 22, 'per_min_rate': 2.5, 'operating_fee': 30},
 }
+
 DEFAULT_SURGE_MULTIPLIER = 1.0
+
 def calculate_fare(pricing, distance_km, time_min, surge_multiplier=DEFAULT_SURGE_MULTIPLIER):
     base_rate = pricing['base_rate']
     if 'base_distance' in pricing:
@@ -220,9 +258,13 @@ def calculate_fare(pricing, distance_km, time_min, surge_multiplier=DEFAULT_SURG
     
     return round(total_fare, 2)
 
-def apply_variability(fare, max_variability=15):
-    variability = random.uniform(-max_variability, max_variability)
-    return round(fare + variability, 2)
+def apply_variability(fare, variability_percent=5):
+    """
+    Introduce small random variability to fares.
+    variability_percent: maximum percent variability (+/-) allowed.
+    """
+    variability_factor = 1 + random.uniform(-variability_percent / 100, variability_percent / 100)
+    return round(fare * variability_factor, 2)
 
 class EstimateFareView(APIView):
     def post(self, request):
@@ -231,67 +273,56 @@ class EstimateFareView(APIView):
             user_id = body.get('user_id')
             distance_km = float(body.get('distance_km'))
             time_min = float(body.get('time_min'))
-            surge_multiplier = float(body.get('surge_multiplier', DEFAULT_SURGE_MULTIPLIER))
-            
-            # Seed random number generator for consistent variability during the request
+            user_provided_surge = body.get('surge_multiplier')
+            time_based_surge = get_time_based_surge()
+            # Read signature from client
+            client_signature = body.get('signature')
+
+            # Create the message string
+            message = f"{user_id}:{distance_km}:{time_min}"
+
+            # Verify HMAC Signature
+            if not client_signature or not verify_hmac_signature(message, client_signature):
+                return Response({'error': 'Invalid or missing signature'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+            if user_provided_surge is not None:
+                surge_multiplier = float(user_provided_surge)
+            else:
+                surge_multiplier = time_based_surge
+
+            # Seed random number generator for consistent randomness within request
             random.seed(f"{user_id}-{distance_km}-{time_min}-{time.time()}")
-            
+
             # Check if the user exists
             if not User.objects.filter(user_id=user_id).exists():
                 return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
-            
-            # Generate base fare estimates
-            uber_fares = {
-                'auto': calculate_fare(UBER_PRICING['auto'], distance_km, time_min, surge_multiplier),
-                'go': calculate_fare(UBER_PRICING['go'], distance_km, time_min, surge_multiplier),
-                'moto': calculate_fare(UBER_PRICING['moto'], distance_km, time_min, surge_multiplier),
-                'premier': calculate_fare(UBER_PRICING['premier'], distance_km, time_min, surge_multiplier),
-                'uberxl': calculate_fare(UBER_PRICING['uberxl'], distance_km, time_min, surge_multiplier),
-                'gosedan': calculate_fare(UBER_PRICING['gosedan'], distance_km, time_min, surge_multiplier),
-                'uberxs': calculate_fare(UBER_PRICING['uberxs'], distance_km, time_min, surge_multiplier),
-                'pool': calculate_fare(UBER_PRICING['pool'], distance_km, time_min, surge_multiplier),
-                'xlplus': calculate_fare(UBER_PRICING['xlplus'], distance_km, time_min, surge_multiplier)
-            }
-            
-            ola_fares = {
-                'prime_sedan': calculate_fare(OLA_PRICING['prime_sedan'], distance_km, time_min, surge_multiplier),
-                'mini': calculate_fare(OLA_PRICING['mini'], distance_km, time_min, surge_multiplier),
-                'auto': calculate_fare(OLA_PRICING['auto'], distance_km, time_min, surge_multiplier),
-                'share': calculate_fare(OLA_PRICING['share'], distance_km, time_min, surge_multiplier),
-                'rentals': calculate_fare(OLA_PRICING['rentals'], distance_km, time_min, surge_multiplier),
-                'outstation': calculate_fare(OLA_PRICING['outstation'], distance_km, time_min, surge_multiplier),
-                'luxury': calculate_fare(OLA_PRICING['luxury'], distance_km, time_min, surge_multiplier),
-                'taxi_for_sure': calculate_fare(OLA_PRICING['taxi_for_sure'], distance_km, time_min, surge_multiplier)
-            }
-            
-            namma_yatri_fares = {
-                'non_ac_mini': calculate_fare(NAMMA_YATRI_PRICING['non_ac_mini'], distance_km, time_min, surge_multiplier),
-                'ac_mini': calculate_fare(NAMMA_YATRI_PRICING['ac_mini'], distance_km, time_min, surge_multiplier),
-                'sedan': calculate_fare(NAMMA_YATRI_PRICING['sedan'], distance_km, time_min, surge_multiplier),
-                'xl_cab': calculate_fare(NAMMA_YATRI_PRICING['xl_cab'], distance_km, time_min, surge_multiplier)
-            }
-            
-            rapido_fares = {
-                'auto': calculate_fare(RAPIDO_PRICING['auto'], distance_km, time_min, surge_multiplier),
-                'bike': calculate_fare(RAPIDO_PRICING['bike'], distance_km, time_min, surge_multiplier)
-            }
-            
-            # Apply variability ensuring the difference is within the max limit
-            max_difference = 15
+
+            uber_fares = {service: calculate_fare(UBER_PRICING[service], distance_km, time_min, surge_multiplier) 
+                          for service in UBER_PRICING}
+            ola_fares = {service: calculate_fare(OLA_PRICING[service], distance_km, time_min, surge_multiplier) 
+                         for service in OLA_PRICING}
+            namma_yatri_fares = {service: calculate_fare(NAMMA_YATRI_PRICING[service], distance_km, time_min, surge_multiplier) 
+                                 for service in NAMMA_YATRI_PRICING}
+            rapido_fares = {service: calculate_fare(RAPIDO_PRICING[service], distance_km, time_min, surge_multiplier) 
+                            for service in RAPIDO_PRICING}
+
+            # Reduce Uber fares slightly (say by 10%)
+            uber_fares = {service: round(fare * 0.95, 2) for service, fare in uber_fares.items()}
+
+            # Apply small variability to all fares
+            uber_fares = {service: apply_variability(fare) for service, fare in uber_fares.items()}
+            ola_fares = {service: apply_variability(fare) for service, fare in ola_fares.items()}
+            namma_yatri_fares = {service: apply_variability(fare) for service, fare in namma_yatri_fares.items()}
+            rapido_fares = {service: apply_variability(fare) for service, fare in rapido_fares.items()}
+
             fares = {
-                'uber': {service: apply_variability(fare, max_difference) for service, fare in uber_fares.items()},
-                'ola': {service: apply_variability(fare, max_difference) for service, fare in ola_fares.items()},
-                'namma_yatri': {service: apply_variability(fare, max_difference) for service, fare in namma_yatri_fares.items()},
-                'rapido': {service: apply_variability(fare, max_difference) for service, fare in rapido_fares.items()}
+                'uber': uber_fares,
+                'ola': ola_fares,
+                'namma_yatri': namma_yatri_fares,
+                'rapido': rapido_fares
             }
-            
-            # Ensure the difference between similar services is within the specified range
-            for service in uber_fares.keys():
-                if service in ola_fares and abs(fares['uber'][service] - fares['ola'][service]) > max_difference:
-                    average_fare = (fares['uber'][service] + fares['ola'][service]) / 2
-                    fares['uber'][service] = round(average_fare + random.uniform(-max_difference / 2, max_difference / 2), 2)
-                    fares['ola'][service] = round(average_fare - random.uniform(-max_difference / 2, max_difference / 2), 2)
-            
+
             response = {
                 'distance_km': distance_km,
                 'time_min': time_min,
@@ -315,6 +346,15 @@ class TripData(APIView):
         service_name = body.get('service_name')
         vehicle_type = body.get('vehicle_type')
         price = body.get('price')
+
+        client_signature = body.get('signature')
+
+        # Construct a message from booking important fields
+        message = f"{user_id}:{pickup_location}:{destination_location}:{distance_km}:{time_minutes}:{service_name}:{vehicle_type}:{price}"
+
+        if not client_signature or not verify_hmac_signature(message, client_signature):
+            return Response({'error': 'Invalid or missing signature'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
         if not user_id or not pickup_location or not destination_location or not distance_km or not time_minutes or not surge_multiplier or not service_name or not vehicle_type or not price:
             return Response({'error': 'Please provide all the required data'}, status=status.HTTP_400_BAD_REQUEST)

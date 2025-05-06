@@ -5,6 +5,16 @@ import Navbar from '../../components/Navbar/Navbar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
+
+// Same secret key used in backend (for demo only - real apps never store this in frontend)
+const SECRET_KEY = 'abhkkish@2025';
+
+const generateSignature = (message: string): string => {
+  const hash = CryptoJS.HmacSHA256(message, SECRET_KEY);
+  return hash.toString(CryptoJS.enc.Hex);
+};
+
 
 interface Car {
   imgUrl: string;
@@ -17,11 +27,25 @@ interface Car {
 
 const uberCarList: Car[] = [
   {
+    imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Moto_v1.png',
+    service: 'Moto',
+    multiplier: 1,
+    details: "Affordable and quick motorcycle rides",
+    time: "10 min away"
+  },
+  {
     imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/TukTuk_Green_v1.png',
     service: 'Auto',
     multiplier: 1.5,
     details: "Auto rickshaws at the tap of a button",
     time: "15 min away"
+  },
+  {
+    imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/TukTuk_Green_v1.png',
+    service: 'Pool',
+    multiplier: 1.5,
+    details: "Shared rides to save cost",
+    time: "16 min away"
   },
   {
     imgUrl: 'https://i.ibb.co/cyvcpfF/uberx.png',
@@ -30,13 +54,7 @@ const uberCarList: Car[] = [
     details: "Everyday rides with AC",
     time: "30 min away"
   },
-  {
-    imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Moto_v1.png',
-    service: 'Moto',
-    multiplier: 1,
-    details: "Affordable and quick motorcycle rides",
-    time: "10 min away"
-  },
+  
   {
     imgUrl: 'https://i.ibb.co/cyvcpfF/uberx.png',
     service: 'Premier',
@@ -65,13 +83,7 @@ const uberCarList: Car[] = [
     details: "Compact rides for everyday use",
     time: "18 min away"
   },
-  {
-    imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/TukTuk_Green_v1.png',
-    service: 'Pool',
-    multiplier: 1.5,
-    details: "Shared rides to save cost",
-    time: "16 min away"
-  },
+  
   {
     imgUrl: 'https://i.ibb.co/cyvcpfF/uberx.png',
     service: 'XLPlus',
@@ -142,22 +154,58 @@ const olaCarList: Car[] = [
 
 const rapidoCarList: Car[] = [
   {
-    imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/TukTuk_Green_v1.png',
-    service: 'Auto',
-    multiplier: 1.5,
-    details: "Affordable auto rides",
-    time: "8 min away"
-  },
-
-  {
     imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Moto_v1.png',
     service: 'Bike',
     multiplier: 1,
     details: "Quick bike rides",
     time: "5 min away"
   },
-
+  {
+    imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/TukTuk_Green_v1.png',
+    service: 'Auto',
+    multiplier: 1.5,
+    details: "Affordable auto rides",
+    time: "8 min away"
+  },
+  
+  {
+    imgUrl: 'https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/TukTuk_Green_v1.png', // Pet friendly auto
+    service: 'Auto_Pet',
+    multiplier: 1.7,
+    details: "Auto rides for you and your pet",
+    time: "9 min away"
+  },
+  {
+    imgUrl: 'https://i.ibb.co/cyvcpfF/uberx.png', // Rapido Non-AC Cab image
+    service: 'Cab_Non-AC',
+    multiplier: 1.8,
+    details: "Comfortable non-AC cabs",
+    time: "12 min away"
+  },
+  {
+    imgUrl: 'https://i.ibb.co/cyvcpfF/uberx.png', // Rapido Auto Share image
+    service: 'Auto_Share',
+    multiplier: 1.1,
+    details: "Shared auto rides",
+    time: "7 min away"
+  },
+  {
+    imgUrl: 'https://i.ibb.co/cyvcpfF/uberx.png', // Premium Cab from Rapido
+    service: 'Cab_Premium',
+    multiplier: 2,
+    details: "Premium cab service",
+    time: "15 min away"
+  },
+  {
+    imgUrl: 'https://i.ibb.co/cyvcpfF/uberx.png', // AC Cab
+    service: 'Cab_AC',
+    multiplier: 2.2,
+    details: "Air-conditioned cab rides",
+    time: "10 min away"
+  },
+  
 ];
+
 
 
 const ComparePage: React.FC = () => {
@@ -174,20 +222,24 @@ const ComparePage: React.FC = () => {
     const fetchData = async () => {
       if (user) {
         try {
+          const message = `${user.user_id}:${distance}:${duration}`;
+          const signature = generateSignature(message);
+    
           const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/estimate_fare/`, {
             distance_km: distance,
             user_id: user.user_id,
             time_min: duration,
             surge_multiplier: 1,
+            signature: signature
           });
-
+    
           const mapServices = (serviceData: any, carList: Car[]) => {
             return carList.map(car => ({
               ...car,
               fare: serviceData[car.service.toLowerCase()]
             }));
           };
-
+    
           setOla(mapServices(response.data.fares.ola, olaCarList));
           setUber(mapServices(response.data.fares.uber, uberCarList));
           setRapido(mapServices(response.data.fares.rapido, rapidoCarList));
@@ -196,9 +248,11 @@ const ComparePage: React.FC = () => {
         }
       }
     };
+    
 
     fetchData();
   }, [distance, duration, user]);
+  // console.log(rapido);
 
   const handleSelectService = (service: string) => {
     setSelectedService(service);
@@ -218,25 +272,30 @@ const ComparePage: React.FC = () => {
         vehicle_type: serviceType,
         price: fare
       };
-
+  
+      const message = `${payload.user_id}:${payload.pickup_location}:${payload.destination_location}:${payload.distance_km}:${payload.time_minutes}:${payload.service_name}:${payload.vehicle_type}:${payload.price}`;
+      const signature = generateSignature(message);
+  
       try {
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/trips/`, payload);
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/trips/`, {
+          ...payload,
+          signature: signature
+        });
         console.log('Booking response:', response.data);
-        // Redirect to the specific service's website
+  
         const serviceUrls: { [key: string]: string } = {
           'Uber': 'https://www.uber.com',
           'Ola': 'https://www.olacabs.com',
           'Rapido': 'https://www.rapido.bike'
         };
         window.open(serviceUrls[serviceName], '_blank');
-        // Navigate to the dashboard on the current tab
         navigate('/dashboard');
       } catch (error) {
         console.error('Error booking service:', error);
       }
     }
   };
-
+  
   const handleCancelRide = () => {
     navigate('/dashboard');
   };
@@ -306,6 +365,7 @@ const ComparePage: React.FC = () => {
                   <span className="service">{car.service}</span>
                   <span className="details">{car.details}</span>
                   <span className="time">{car.time}</span>
+                  
                   <span className="fare">₹{car.fare?.toFixed(2)}</span>
                 </div>
               </div>

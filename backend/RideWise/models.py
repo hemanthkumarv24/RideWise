@@ -29,8 +29,8 @@ class FavoriteRoute(models.Model):
 
 class Trips(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Updated to refer to User model
-    pickup_location = models.CharField(max_length=100)
-    destination_location = models.CharField(max_length=100)
+    pickup_location = models.CharField(max_length=300)
+    destination_location = models.CharField(max_length=300)
     distance_km = models.DecimalField(max_digits=10, decimal_places=2)
     time_minutes = models.FloatField()
     surge_multiplier = models.DecimalField(max_digits=10, decimal_places=2)

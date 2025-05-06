@@ -1,0 +1,11 @@
+node_modules
+build
+*.log
+**/node_modules
+**/__pycache__
+**/*.pyc
+.git
+.vscode
+docker-compose.yml
+Dockerfile
+.env
